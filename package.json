@@ -1,0 +1,24 @@
+{
+  "name": "Dream Rpg",
+  "version": "0.1",
+  "description": "Dream Game",
+  "keywords": [
+    "Good Game",
+    "Great Content",
+    "Funny Dude"
+  ],
+  "license": "All mine, but you can modify it if you want",
+  "author": "Ricardo Montserrat",
+  "scripts": {
+    "build": "parcel build index.html",
+    "dev": "parcel index.html --open",
+    "start": "npm run build && npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "phaser": "^3.55.2"
+  }
+}

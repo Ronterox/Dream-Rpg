@@ -13,7 +13,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": "./src",
+    "baseUrl": "./public/src",
     "paths": {
       "~/*": ["./*"]
     },
@@ -25,5 +25,7 @@
       "Phaser"
     ]
   },
-  "include": ["src/**/*"]
+  "include": [
+    "public/src/**/*"
+  ]
 }

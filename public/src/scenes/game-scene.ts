@@ -1,6 +1,6 @@
 import { Scene } from "phaser";
 // @ts-ignore
-import images from '../img/*.png';
+import images from '../../assets/sprites/*.png';
 import PhysicsType = Phaser.Physics.Arcade;
 import GameObject = Phaser.GameObjects.GameObject;
 import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;

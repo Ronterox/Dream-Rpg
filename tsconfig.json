@@ -10,10 +10,12 @@
     "importHelpers": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": "./public/src",
+    "strictPropertyInitialization": false,
     "paths": {
       "~/*": ["./*"]
     },

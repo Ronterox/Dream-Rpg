@@ -1,40 +1,40 @@
 import { Scene, GameObjects, Game, AUTO, Input } from 'phaser';
-import tilemap from '../../assets/mapping/isometric-grass-and-water.json';
+import tilemap from '../../assets/sprites/isometric-grass-and-water.json';
 import images from '../../assets/sprites/*.png';
 import CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 
-enum Direction { North, East, West, South, NorthEast, NorthWest, SouthEast, SouthWest }
+const WIN_HEIGHT = 600, WIN_WIDTH = 800;
 
-type MoveDirection =
+//TODO: vector class
+//But is okay to use something simple like interface here
+type Position =
   {
-    offset: number,
     x: number,
-    y: number,
-    opposite: Direction
+    y: number
   }
 
 interface Directions
 {
-  west: MoveDirection,
-  northWest: MoveDirection,
-  north: MoveDirection,
-  northEast: MoveDirection,
-  east: MoveDirection,
-  southEast: MoveDirection,
-  south: MoveDirection,
-  southWest: MoveDirection
+  west: Position,
+  northWest: Position,
+  north: Position,
+  northEast: Position,
+  east: Position,
+  southEast: Position,
+  south: Position,
+  southWest: Position
 }
 
 const directions: Directions =
   {
-    west: { offset: 0, x: -2, y: 0, opposite: Direction.East },
-    northWest: { offset: 32, x: -2, y: -1, opposite: Direction.NorthWest },
-    north: { offset: 64, x: 0, y: -2, opposite: Direction.North },
-    northEast: { offset: 96, x: 2, y: -1, opposite: Direction.NorthEast },
-    east: { offset: 128, x: 2, y: 0, opposite: Direction.West },
-    southEast: { offset: 160, x: 2, y: 1, opposite: Direction.SouthEast },
-    south: { offset: 192, x: 0, y: 2, opposite: Direction.South },
-    southWest: { offset: 224, x: -2, y: 1, opposite: Direction.SouthWest }
+    west: { x: -2, y: 0 },
+    northWest: { x: -2, y: -1 },
+    north: { x: 0, y: -2 },
+    northEast: { x: 2, y: -1 },
+    east: { x: 2, y: 0 },
+    southEast: { x: 2, y: 1 },
+    south: { x: 0, y: 2 },
+    southWest: { x: -2, y: 1 }
   };
 
 const SPRITE_KEYS =
@@ -50,99 +50,153 @@ type AnimationFrame =
   {
     startFrame: number,
     endFrame: number,
-    speed: number
+    frameRate: number,
+    loop: boolean
   }
 
 interface SkeletonAnimations
 {
-  idle: AnimationFrame,
-  walk: AnimationFrame
-  attack: AnimationFrame,
+  idleUp: AnimationFrame,
+  idleDown: AnimationFrame,
+  walkUp: AnimationFrame
+  walkDown: AnimationFrame
+  attackUp: AnimationFrame,
+  attackDown: AnimationFrame,
   die: AnimationFrame,
   shoot: AnimationFrame,
 }
 
+const SPRITE_ROW_OFFSET = 27 * 6;
+
 const anims: SkeletonAnimations = {
-  idle: {
+  idleUp: {
     startFrame: 0,
-    endFrame: 4,
-    speed: 0.2
+    endFrame: 3,
+    frameRate: 8,
+    loop: false
   },
-  walk: {
+  idleDown: {
+    startFrame: SPRITE_ROW_OFFSET,
+    endFrame: 3 + SPRITE_ROW_OFFSET,
+    frameRate: 8,
+    loop: false
+  },
+  walkUp: {
     startFrame: 4,
-    endFrame: 12,
-    speed: 0.15
+    endFrame: 11,
+    frameRate: 12,
+    loop: true
   },
-  attack: {
+  walkDown: {
+    startFrame: 4 + SPRITE_ROW_OFFSET,
+    endFrame: 11 + SPRITE_ROW_OFFSET,
+    frameRate: 12,
+    loop: true
+  },
+  attackUp: {
     startFrame: 12,
     endFrame: 20,
-    speed: 0.11
+    frameRate: 12,
+    loop: false
+  },
+  attackDown: {
+    startFrame: 12 + SPRITE_ROW_OFFSET,
+    endFrame: 20 + SPRITE_ROW_OFFSET,
+    frameRate: 12,
+    loop: false
   },
   die: {
     startFrame: 20,
     endFrame: 28,
-    speed: 0.2
+    frameRate: 12,
+    loop: false
   },
   shoot: {
     startFrame: 28,
     endFrame: 32,
-    speed: 0.1
+    frameRate: 12,
+    loop: false
   }
 };
 
 
-let scene;
+let scene: Scene;
 
 interface PlayerControls
 {
-  up: Input.Keyboard.Key,
-  down: Input.Keyboard.Key,
-  left: Input.Keyboard.Key,
-  right: Input.Keyboard.Key
+  W: Input.Keyboard.Key,
+  A: Input.Keyboard.Key,
+  S: Input.Keyboard.Key,
+  D: Input.Keyboard.Key
 }
 
 class Skeleton extends GameObjects.Sprite
 {
   private startX: number;
   private startY: number;
-  private readonly distance: number;
 
   private readonly speed: number;
 
   public controls: PlayerControls;
 
-  constructor(scene, x = 240, y = 290, speed = 1, distance = 100)
+  constructor(scene, x = WIN_WIDTH * .5, y = WIN_HEIGHT * .5, speed = 2)
   {
     super(scene, x, y, SPRITE_KEYS.skeleton);
 
     this.startX = x;
     this.startY = y;
-    this.distance = distance;
 
     this.speed = speed;
     this.depth = y + 64;
+
+    this.setAnimations();
+
+    this.controls = this.scene.input.keyboard.addKeys('W,A,S,D') as PlayerControls;
+  }
+
+  setAnimations()
+  {
+    for (const key in anims)
+    {
+      // noinspection JSUnfilteredForInLoop
+      const animation = anims[key];
+
+      // noinspection JSUnfilteredForInLoop
+      this.anims.create({
+        key: key,
+        frames: this.anims.generateFrameNumbers(SPRITE_KEYS.skeleton, { start: animation.startFrame, end: animation.endFrame }),
+        frameRate: animation.frameRate,
+        repeat: animation.loop ? -1 : 0,
+      });
+    }
   }
 
   update()
   {
     const controls = this.controls;
-    let direction: MoveDirection | undefined;
+    let direction: Position | undefined;
 
-    if (controls.up.isDown) direction = directions.north;
-    else if (controls.down.isDown) direction = directions.south;
+    if (controls.W.isDown) direction = directions.north;
+    else if (controls.S.isDown) direction = directions.south;
 
-    if (controls.right.isDown)
+    if (controls.D.isDown)
     {
       if (direction) direction = direction === directions.north ? directions.northEast : directions.southEast;
       else direction = directions.east;
     }
-    else if (controls.left.isDown)
+    else if (controls.A.isDown)
     {
       if (direction) direction = direction === directions.north ? directions.northWest : directions.southWest;
       else direction = directions.west;
     }
 
-    if (!direction) return;
+    //TODO: Mot call animations every single frame,
+    //TODO: Call it by key not string
+    if (!direction)
+    {
+      this.anims.play('idleUp', true);
+      return;
+    }
 
     this.x += direction.x * this.speed;
 
@@ -151,6 +205,8 @@ class Skeleton extends GameObjects.Sprite
       this.y += direction.y * this.speed;
       this.depth = this.y + 64;
     }
+
+    this.anims.play('walkUp', true);
   }
 }
 
@@ -164,6 +220,7 @@ class Example extends Scene
   {
     this.load.json(MAP_KEY, tilemap);
     this.load.spritesheet(SPRITE_KEYS.tiles, images.isometric_grass_and_water, { frameWidth: 64, frameHeight: 64 });
+    //TODO: user atlas for performance
     this.load.spritesheet(SPRITE_KEYS.skeleton, images.skeleton8, { frameWidth: 128, frameHeight: 128 });
     this.load.image(SPRITE_KEYS.house, images.rem_0002);
   }
@@ -175,22 +232,18 @@ class Example extends Scene
     this.buildMap();
     this.placeHouses();
 
-    this.add.existing(this.player = new Skeleton(this, 240, 290, 10));
+    this.add.existing(this.player = new Skeleton(this));
 
-    this.cameras.main.setSize(1600, 600);
+    const mainCamera = this.cameras.main;
+
+    mainCamera.setSize(WIN_WIDTH, WIN_HEIGHT);
     this.fpsText = this.add.text(16, 16, "60 fps").setScrollFactor(0, 0);
 
     const keyboard = this.input.keyboard;
 
     this.cameraControls = keyboard.createCursorKeys();
 
-    this.player.controls =
-      {
-        up: keyboard.addKey('W'),
-        down: keyboard.addKey('S'),
-        left: keyboard.addKey('A'),
-        right: keyboard.addKey('D')
-      };
+    mainCamera.startFollow(this.player);
   }
 
   update()
@@ -198,13 +251,14 @@ class Example extends Scene
     this.player.update();
 
     const controls = this.cameraControls;
-    const scrollSpeed = 5;
+    const scrollSpeed = 0.01;
 
-    if (controls.right.isDown) this.cameras.main.scrollX += scrollSpeed;
-    else if (controls.left.isDown) this.cameras.main.scrollX -= scrollSpeed;
+    //TODO: Rotate this differently temporally
+    if (controls.right.isDown) this.cameras.main.rotation += scrollSpeed;
+    else if (controls.left.isDown) this.cameras.main.rotation -= scrollSpeed;
 
-    if (controls.up.isDown) this.cameras.main.scrollY -= scrollSpeed;
-    else if (controls.down.isDown) this.cameras.main.scrollY += scrollSpeed;
+    if (controls.up.isDown) this.cameras.main.rotation -= scrollSpeed;
+    else if (controls.down.isDown) this.cameras.main.rotation += scrollSpeed;
 
     this.fpsText.setText(`${this.game.loop.actualFps.toFixed(2)} fps`);
   }
@@ -219,9 +273,11 @@ class Example extends Scene
     const tileWidthHalf = tileWidth * .5;
     const tileHeightHalf = tileHeight * .5;
 
-    const layer = data.layers[0].data;
+    const firstLayer = data.layers[0];
 
-    const mapWidth = data.layers[0].width, mapHeight = data.layers[0].height;
+    const layer = firstLayer.data;
+
+    const mapWidth = firstLayer.width, mapHeight = firstLayer.height;
 
     const centerX = mapWidth * tileWidthHalf;
     const centerY = 16;
@@ -258,9 +314,9 @@ class Example extends Scene
 
 const config = {
   type: AUTO,
-  width: 800,
-  height: 600,
-  backgroundColor: '#ABABAB',
+  width: WIN_WIDTH,
+  height: WIN_HEIGHT,
+  backgroundColor: '#1D4711',
   scene: [Example]
 };
 

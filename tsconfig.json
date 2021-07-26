@@ -10,10 +10,12 @@
     "importHelpers": true,
     "moduleResolution": "node",
     "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": "./src",
+    "baseUrl": "./public/src",
+    "strictPropertyInitialization": false,
     "paths": {
       "~/*": ["./*"]
     },
@@ -25,5 +27,7 @@
       "Phaser"
     ]
   },
-  "include": ["src/**/*"]
+  "include": [
+    "public/src/**/*"
+  ]
 }

@@ -4,7 +4,8 @@ const SPRITE_KEYS =
   {
     skeleton: 'skeleton',
     house: 'house',
-    tiles: 'tiles'
+    tiles: 'tiles',
+    zombie: 'zombie'
   };
 
 const MAP_KEY = 'map';

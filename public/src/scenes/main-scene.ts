@@ -6,6 +6,8 @@ import CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 import { Skeleton } from "../gameobjects/skeleton";
 // noinspection ES6PreferShortImport
 import { MAP_KEY, SPRITE_KEYS } from "../game-config";
+// noinspection ES6PreferShortImport
+import { Zombie } from "../gameobjects/zombie";
 
 export class MainScene extends Scene
 {
@@ -21,6 +23,7 @@ export class MainScene extends Scene
     this.load.spritesheet(SPRITE_KEYS.tiles, images.isometric_grass_and_water, { frameWidth: 64, frameHeight: 64 });
     //TODO: user atlas for performance
     this.load.spritesheet(SPRITE_KEYS.skeleton, images.skeleton8, { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet(SPRITE_KEYS.zombie, images.zombie, { frameWidth: 128, frameHeight: 128 });
     this.load.image(SPRITE_KEYS.house, images.rem_0002);
   }
 
@@ -28,12 +31,17 @@ export class MainScene extends Scene
   {
     this.buildMap();
 
+    const mainCamera = this.cameras.main;
+
     const houses = this.placeHouses();
+    const zombie = new Zombie(this, mainCamera.centerX, mainCamera.centerY);
+
     this.player = new Skeleton(this);
 
-    this.physics.add.collider(houses, this.player, () => this.player.clearTargetTile());
+    const stopPlayerMovement = () => this.player.clearTargetTile();
 
-    const mainCamera = this.cameras.main;
+    this.physics.add.collider(houses, this.player, stopPlayerMovement);
+    this.physics.add.collider(zombie, this.player, stopPlayerMovement);
 
     this.fpsText = this.add.text(16, 16, "60 fps").setScrollFactor(0, 0);
     this.fpsText.depth = 1000;

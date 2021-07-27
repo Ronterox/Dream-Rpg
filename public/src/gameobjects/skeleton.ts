@@ -101,11 +101,8 @@ export class Skeleton extends Phaser.Physics.Arcade.Sprite
     this.targetPosition = { x, y };
     this.width *= .5;
 
-    scene.physics.add.existing(this);
-    scene.add.existing(this);
-
-    this.body.setSize(this.width * .5, this.width)
-    this.body.setOffset(this.width * .5 + 15, this.width * .5);
+    scene.physics.add.existing(scene.add.existing(this));
+    this.body.setSize(this.width * .5, this.width).setOffset(this.width * .5 + 15, this.width * .5);
 
     this.awake();
   }

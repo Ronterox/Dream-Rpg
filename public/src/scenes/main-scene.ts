@@ -27,9 +27,11 @@ export class MainScene extends Scene
   create()
   {
     this.buildMap();
-    this.placeHouses();
 
+    const houses = this.placeHouses();
     this.player = new Skeleton(this);
+
+    this.physics.add.collider(houses, this.player, () => this.player.clearTargetTile());
 
     const mainCamera = this.cameras.main;
 
@@ -91,7 +93,7 @@ export class MainScene extends Scene
         const tx = (x - y) * tileWidthHalf;
         const ty = (x + y) * tileHeightHalf;
 
-        const tile: Phaser.GameObjects.Image = tilesGroup.create(centerX + tx, centerY + ty, SPRITE_KEYS.tiles, id);
+        const tile: GameObjects.Image = tilesGroup.create(centerX + tx, centerY + ty, SPRITE_KEYS.tiles, id);
         //TODO: check to a way of adding to the whole group the event
         tile.setInteractive();
         //TODO: check how to get the click event of the object itself
@@ -106,16 +108,23 @@ export class MainScene extends Scene
 
   placeHouses()
   {
-    //TODO: cleaner code here
+    //TODO: find how to create houses with simple iteration
     const houses = this.physics.add.staticGroup();
 
-    const house_1 = this.add.image(240, 370, SPRITE_KEYS.house);
-    house_1.depth = house_1.y + 86;
+    const house_1: GameObjects.Image = houses.create(240, 370, SPRITE_KEYS.house);
 
-    const house_2 = this.add.image(1300, 290, SPRITE_KEYS.house);
+    const size = { width: house_1.width * .5, height: house_1.height * .5 };
+
+    house_1.depth = house_1.y + 86;
+    (house_1.body as Phaser.Physics.Arcade.Body).setSize(size.width, size.height);
+
+    const house_2: GameObjects.Image = houses.create(1300, 290, SPRITE_KEYS.house);
     house_2.depth = house_2.y + 86;
+    (house_2.body as Phaser.Physics.Arcade.Body).setSize(size.width, size.height);
 
     houses.add(house_1);
     houses.add(house_2);
+
+    return houses;
   }
 }

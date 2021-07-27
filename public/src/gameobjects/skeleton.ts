@@ -138,6 +138,12 @@ export class Skeleton extends Phaser.Physics.Arcade.Sprite
     {
       this._targetTile.clearAlpha();
       this._targetTile = undefined;
+
+      //Can also use stop() if changing acceleration and other things
+      this.setVelocity(0, 0);
+      this.isMoving = false;
+
+      this.play('idle' + this._animationDirection);
     }
   }
 
@@ -190,15 +196,7 @@ export class Skeleton extends Phaser.Physics.Arcade.Sprite
     if (!this.isMoving) return;
 
     //TODO: check for a change if this function is slow
-    if (Phaser.Math.Distance.BetweenPoints(this.targetPosition, { x: this.x, y: this.y }) <= this.width * .3)
-    {
-      this.clearTargetTile();
-      //Can also use stop() if changing acceleration and other things
-      this.setVelocity(0, 0);
-      this.isMoving = false;
-
-      this.play('idle' + this._animationDirection);
-    }
+    if (Phaser.Math.Distance.BetweenPoints(this.targetPosition, { x: this.x, y: this.y }) <= this.width * .3) this.clearTargetTile();
     else this.depth = this.y + 64;
   }
 }

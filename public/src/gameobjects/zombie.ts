@@ -19,9 +19,12 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
     scene.physics.add.existing(scene.add.existing(this));
     this.body.setSize(this.width * .2, this.width * .5).setOffset(this.width * .5 + 25, this.width * .5 + 30);
 
-    this.setImmovable().setScale(2,2);
+    this.setImmovable().setInteractive().setScale(2,2);
 
     //TODO: again check for other way of doing this
-    this.on('pointerdown', () => this.setTint());
+    this.on('pointerdown', () =>
+    {
+      this.setTint(5,5,5,5)
+    });
   }
 }

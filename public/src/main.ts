@@ -1,6 +1,7 @@
 import { AUTO, Game } from 'phaser';
 import { MainScene } from './scenes/main-scene';
 import { WIN_HEIGHT, WIN_WIDTH } from "./game-config";
+import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
 import RESIZE = Phaser.Scale.RESIZE;
 
 const config = {
@@ -14,9 +15,16 @@ const config = {
       arcade:
         {
           gravity: { y: 0 },
-          debug: true
+          debug: false
         }
     },
+  plugins: {
+    scene: [{
+      key: 'rexUI',
+      plugin: UIPlugin,
+      mapping: 'rexUI'
+    }]
+  },
   scale: {
     mode: RESIZE,
     autoCenter: RESIZE

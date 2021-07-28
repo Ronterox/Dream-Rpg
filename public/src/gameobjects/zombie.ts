@@ -1,6 +1,7 @@
 // noinspection ES6PreferShortImport
 import { SPRITE_KEYS, WIN_HEIGHT, WIN_WIDTH } from "../game-config";
 import { Scene } from "phaser";
+import { Dialog } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
 
 //TODO: Generalize methods and interfaces from Skeleton class
 //TODO: let zombie walk around
@@ -19,12 +20,12 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
     scene.physics.add.existing(scene.add.existing(this));
     this.body.setSize(this.width * .2, this.width * .5).setOffset(this.width * .5 + 25, this.width * .5 + 30);
 
-    this.setImmovable().setInteractive().setScale(2,2);
+    this.setImmovable().setInteractive().setScale(2, 2);
 
     //TODO: again check for other way of doing this
     this.on('pointerdown', () =>
     {
-      this.setTint(5,5,5,5)
+      this.setTint(5, 5, 5, 5)
     });
   }
 }

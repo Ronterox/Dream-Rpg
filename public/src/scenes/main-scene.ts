@@ -8,9 +8,14 @@ import { Skeleton } from "../gameobjects/skeleton";
 import { MAP_KEY, SPRITE_KEYS } from "../game-config";
 // noinspection ES6PreferShortImport
 import { Zombie } from "../gameobjects/zombie";
+// noinspection ES6PreferShortImport
+import { QuestDialogue } from "../gameobjects/ui/quest-dialogue";
+import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 
 export class MainScene extends Scene
 {
+  public rexUI: RexUIPlugin;
+
   private fpsText: GameObjects.Text;
   private cameraControls: CursorKeys;
   private player: Skeleton;
@@ -43,7 +48,7 @@ export class MainScene extends Scene
     this.physics.add.collider(houses, this.player, stopPlayerMovement);
     this.physics.add.collider(zombie, this.player, stopPlayerMovement);
 
-    this.fpsText = this.add.text(16, 16, "60 fps").setScrollFactor(0, 0);
+    this.fpsText = this.add.text(16, 16, "60 fps, 0 objects").setScrollFactor(0, 0);
     this.fpsText.depth = 1000;
 
     const keyboard = this.input.keyboard;
@@ -51,6 +56,8 @@ export class MainScene extends Scene
     this.cameraControls = keyboard.createCursorKeys();
 
     mainCamera.startFollow(this.player);
+
+    new QuestDialogue(this);
   }
 
   update()
@@ -66,7 +73,7 @@ export class MainScene extends Scene
     if (controls.up.isDown) this.cameras.main.setZoom(this._cameraZoom.x += zoomSpeed, this._cameraZoom.y += zoomSpeed);
     else if (controls.down.isDown) this.cameras.main.setZoom(this._cameraZoom.x -= zoomSpeed, this._cameraZoom.y -= zoomSpeed);
 
-    this.fpsText.setText(`${this.game.loop.actualFps.toFixed(2)} fps`);
+    this.fpsText.setText(`${this.game.loop.actualFps.toFixed(2)} fps, ${this.children.list.length} objects`);
   }
 
 

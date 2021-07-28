@@ -7,8 +7,10 @@ import { Skeleton } from "../gameobjects/skeleton";
 // noinspection ES6PreferShortImport
 import { MAP_KEY, SPRITE_KEYS } from "../game-config";
 // noinspection ES6PreferShortImport
-import { Zombie } from "../gameobjects/zombie";
+import { NiceZombie } from "../gameobjects/nice-zombie";
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
+// noinspection ES6PreferShortImport
+import { NotSoNiceZombie } from "../gameobjects/not-so-nice-zombie";
 
 export class MainScene extends Scene
 {
@@ -39,14 +41,18 @@ export class MainScene extends Scene
     const mainCamera = this.cameras.main;
 
     const houses = this.placeHouses();
-    const zombie = new Zombie(this, mainCamera.centerX, mainCamera.centerY);
+
+    const zombies = this.physics.add.group();
+
+    new NiceZombie(this, zombies, mainCamera.centerX, mainCamera.centerY);
+    new NotSoNiceZombie(this, zombies, mainCamera.centerX - 100, mainCamera.centerY - 100);
 
     this.player = new Skeleton(this);
 
     const stopPlayerMovement = () => this.player.clearTargetTile();
 
     this.physics.add.collider(houses, this.player, stopPlayerMovement);
-    this.physics.add.collider(zombie, this.player, stopPlayerMovement);
+    this.physics.add.collider(zombies, this.player, stopPlayerMovement);
 
     this.fpsText = this.add.text(16, 16, "60 fps, 0 objects").setScrollFactor(0, 0);
     this.fpsText.depth = 1000;

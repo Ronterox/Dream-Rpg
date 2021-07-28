@@ -33,7 +33,7 @@ function getDefaultConfig(scene: MainScene): Dialog.IConfig
 
     background: scene.rexUI.add.roundRectangle(0, 0, 100, 100, 20, 0x1565c0),
 
-    title: createLabel(scene, 'Speaking to Mr. Zombie'),
+    title: createLabel(scene, 'Speaking to Mr. NiceZombie'),
 
     toolbar: [createLabel(scene, 'X')],
 

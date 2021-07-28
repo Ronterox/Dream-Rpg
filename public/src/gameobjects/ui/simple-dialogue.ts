@@ -37,17 +37,11 @@ function getDefaultConfig(scene: MainScene): Dialog.IConfig
 
     toolbar: [createLabel(scene, 'X')],
 
-    content: createLabel(scene, 'Mr. Zombie'),
-
-    description: createLabel(scene, 'I\'m here looking for help'),
-
     choices: [
       createLabel(scene, 'Howdy'),
       createLabel(scene, 'Hello'),
       createLabel(scene, 'How is it going?')
     ],
-
-    actions: [createLabel(scene, 'Go Next')],
 
     space: {
       left: 20,
@@ -92,6 +86,8 @@ function getDefaultConfig(scene: MainScene): Dialog.IConfig
 
 export class SimpleDialogue extends Dialog
 {
+  public onQuit: () => void;
+
   constructor(scene: MainScene, config: Dialog.IConfig = getDefaultConfig(scene))
   {
     super(scene, config);
@@ -118,10 +114,21 @@ export class SimpleDialogue extends Dialog
     //TODO: find a better way of detecting choices
     this.on('button.click', (button, groupName: string, index: number) =>
     {
+      if (button.text === 'X')
+      {
+        this.displayAndUpdate(false);
+        this.onQuit();
+      }
       print.text += groupName + '-' + index + ': ' + button.text + '\n';
     })
       .on('button.over', (button) => button.getElement('background').setStrokeStyle(1, 0xffffff))
       .on('button.out', (button) => button.getElement('background').setStrokeStyle());
+  }
+
+  displayAndUpdate(condition: boolean)
+  {
+    this.setActive(condition);
+    this.setVisible(condition);
   }
 
   addAnimations(scene: Scene)

@@ -27,10 +27,10 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
     this.setImmovable().setInteractive().setScale(2, 2);
 
     //TODO: again check for other way of doing this
+    //If you want look for another better way of pointer down event
     this.on('pointerdown', () =>
     {
-      // const dialogue = new SimpleDialogue(scene as MainScene);
-      if (this.dialogue) this.dialogue.set(true);
+      if (this.dialogue) this.dialogue.displayAndUpdate(true);
       else this.dialogue = new SimpleTextBox(scene as MainScene, "This is a long text. This is a long text. This is a long text. This is a long text. This is a long text. This is a long text. ");
     });
   }

@@ -8,8 +8,6 @@ import { Skeleton } from "../gameobjects/skeleton";
 import { MAP_KEY, SPRITE_KEYS } from "../game-config";
 // noinspection ES6PreferShortImport
 import { Zombie } from "../gameobjects/zombie";
-// noinspection ES6PreferShortImport
-import { QuestDialogue } from "../gameobjects/ui/quest-dialogue";
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 
 export class MainScene extends Scene
@@ -25,10 +23,12 @@ export class MainScene extends Scene
   preload()
   {
     this.load.json(MAP_KEY, tilemap);
-    this.load.spritesheet(SPRITE_KEYS.tiles, images.isometric_grass_and_water, { frameWidth: 64, frameHeight: 64 });
+
     //TODO: user atlas for performance
     this.load.spritesheet(SPRITE_KEYS.skeleton, images.skeleton8, { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet(SPRITE_KEYS.tiles, images.isometric_grass_and_water, { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet(SPRITE_KEYS.zombie, images.zombie, { frameWidth: 128, frameHeight: 128 });
+
     this.load.image(SPRITE_KEYS.house, images.rem_0002);
   }
 
@@ -56,8 +56,6 @@ export class MainScene extends Scene
     this.cameraControls = keyboard.createCursorKeys();
 
     mainCamera.startFollow(this.player);
-
-    new QuestDialogue(this);
   }
 
   update()

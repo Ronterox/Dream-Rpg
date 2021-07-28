@@ -9,15 +9,10 @@ const config = {
   width: WIN_WIDTH,
   height: WIN_HEIGHT,
   backgroundColor: '#000',
-  physics:
-    {
-      default: 'arcade',
-      arcade:
-        {
-          gravity: { y: 0 },
-          debug: false
-        }
-    },
+  physics: {
+    default: 'arcade',
+    arcade: { gravity: { y: 0 }, debug: false }
+  },
   plugins: {
     scene: [{
       key: 'rexUI',
@@ -25,10 +20,7 @@ const config = {
       mapping: 'rexUI'
     }]
   },
-  scale: {
-    mode: RESIZE,
-    autoCenter: RESIZE
-  },
+  scale: { mode: RESIZE, autoCenter: RESIZE },
   scene: [MainScene]
 };
 

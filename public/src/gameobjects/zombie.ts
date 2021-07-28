@@ -1,12 +1,16 @@
 // noinspection ES6PreferShortImport
 import { SPRITE_KEYS, WIN_HEIGHT, WIN_WIDTH } from "../game-config";
 import { Scene } from "phaser";
-import { Dialog } from 'phaser3-rex-plugins/templates/ui/ui-components.js';
+// noinspection ES6PreferShortImport
+import { MainScene } from "../scenes/main-scene";
+// noinspection ES6PreferShortImport
+import { SimpleTextBox } from "../gameobjects/ui/textbox";
 
 //TODO: Generalize methods and interfaces from Skeleton class
 //TODO: let zombie walk around
 export class Zombie extends Phaser.Physics.Arcade.Sprite
 {
+  private dialogue: SimpleTextBox;
   private readonly speed: number;
 
   constructor(scene: Scene, x = WIN_WIDTH * .5, y = WIN_HEIGHT * .5, speed = 2)
@@ -25,7 +29,9 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
     //TODO: again check for other way of doing this
     this.on('pointerdown', () =>
     {
-      this.setTint(5, 5, 5, 5)
+      // const dialogue = new SimpleDialogue(scene as MainScene);
+      if (this.dialogue) this.dialogue.set(true);
+      else this.dialogue = new SimpleTextBox(scene as MainScene, "This is a long text. This is a long text. This is a long text. This is a long text. This is a long text. This is a long text. ");
     });
   }
 }

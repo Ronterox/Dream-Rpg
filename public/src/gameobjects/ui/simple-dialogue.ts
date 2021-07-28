@@ -3,7 +3,7 @@ import { Scene } from "phaser";
 // noinspection ES6PreferShortImport
 import { MainScene } from "../../scenes/main-scene";
 
-const createLabel = function (scene: MainScene, text: string)
+const createLabel = function (scene: MainScene, text: string = "No Text")
 {
   return scene.rexUI.add.label({
     width: 40, // Minimum width of round-rectangle
@@ -33,32 +33,21 @@ function getDefaultConfig(scene: MainScene): Dialog.IConfig
 
     background: scene.rexUI.add.roundRectangle(0, 0, 100, 100, 20, 0x1565c0),
 
-    title: createLabel(scene, 'Title'),
+    title: createLabel(scene, 'Speaking to Mr. Zombie'),
 
-    toolbar: [
-      createLabel(scene, 'O'),
-      createLabel(scene, 'X')
-    ],
+    toolbar: [createLabel(scene, 'X')],
 
-    leftToolbar: [
-      createLabel(scene, 'A'),
-      createLabel(scene, 'B')
-    ],
+    content: createLabel(scene, 'Mr. Zombie'),
 
-    content: createLabel(scene, 'Content'),
-
-    description: createLabel(scene, 'Description'),
+    description: createLabel(scene, 'I\'m here looking for help'),
 
     choices: [
-      createLabel(scene, 'Choice0'),
-      createLabel(scene, 'Choice1'),
-      createLabel(scene, 'Choice2')
+      createLabel(scene, 'Howdy'),
+      createLabel(scene, 'Hello'),
+      createLabel(scene, 'How is it going?')
     ],
 
-    actions: [
-      createLabel(scene, 'Action0'),
-      createLabel(scene, 'Action1')
-    ],
+    actions: [createLabel(scene, 'Go Next')],
 
     space: {
       left: 20,
@@ -101,11 +90,11 @@ function getDefaultConfig(scene: MainScene): Dialog.IConfig
   };
 }
 
-export class QuestDialogue extends Dialog
+export class SimpleDialogue extends Dialog
 {
-  constructor(scene: MainScene, config?: Dialog.IConfig)
+  constructor(scene: MainScene, config: Dialog.IConfig = getDefaultConfig(scene))
   {
-    super(scene, config ? config : getDefaultConfig(scene));
+    super(scene, config);
     this.setDesign();
     this.setInteractions(scene);
     this.addAnimations(scene);
@@ -124,19 +113,15 @@ export class QuestDialogue extends Dialog
   setInteractions(scene: Scene)
   {
     const print = scene.add.text(0, 0, '');
-    this
-      .on('button.click', (button, groupName, index, pointer, event) =>
-      {
-        print.text += groupName + '-' + index + ': ' + button.text + '\n';
-      }, scene)
-      .on('button.over', (button, groupName, index, pointer, event) =>
-      {
-        button.getElement('background').setStrokeStyle(1, 0xffffff);
-      })
-      .on('button.out', (button, groupName, index, pointer, event) =>
-      {
-        button.getElement('background').setStrokeStyle();
-      });
+
+    //TODO: find which type of button is this
+    //TODO: find a better way of detecting choices
+    this.on('button.click', (button, groupName: string, index: number) =>
+    {
+      print.text += groupName + '-' + index + ': ' + button.text + '\n';
+    })
+      .on('button.over', (button) => button.getElement('background').setStrokeStyle(1, 0xffffff))
+      .on('button.out', (button) => button.getElement('background').setStrokeStyle());
   }
 
   addAnimations(scene: Scene)

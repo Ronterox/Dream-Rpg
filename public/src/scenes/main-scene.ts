@@ -7,10 +7,15 @@ import { Skeleton } from "../gameobjects/skeleton";
 // noinspection ES6PreferShortImport
 import { MAP_KEY, SPRITE_KEYS } from "../game-config";
 // noinspection ES6PreferShortImport
-import { Zombie } from "../gameobjects/zombie";
+import { NiceZombie } from "../gameobjects/nice-zombie";
+import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
+// noinspection ES6PreferShortImport
+import { NotSoNiceZombie } from "../gameobjects/not-so-nice-zombie";
 
 export class MainScene extends Scene
 {
+  public rexUI: RexUIPlugin;
+
   private fpsText: GameObjects.Text;
   private cameraControls: CursorKeys;
   private player: Skeleton;
@@ -20,10 +25,12 @@ export class MainScene extends Scene
   preload()
   {
     this.load.json(MAP_KEY, tilemap);
-    this.load.spritesheet(SPRITE_KEYS.tiles, images.isometric_grass_and_water, { frameWidth: 64, frameHeight: 64 });
+
     //TODO: user atlas for performance
     this.load.spritesheet(SPRITE_KEYS.skeleton, images.skeleton8, { frameWidth: 128, frameHeight: 128 });
+    this.load.spritesheet(SPRITE_KEYS.tiles, images.isometric_grass_and_water, { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet(SPRITE_KEYS.zombie, images.zombie, { frameWidth: 128, frameHeight: 128 });
+
     this.load.image(SPRITE_KEYS.house, images.rem_0002);
   }
 
@@ -34,16 +41,20 @@ export class MainScene extends Scene
     const mainCamera = this.cameras.main;
 
     const houses = this.placeHouses();
-    const zombie = new Zombie(this, mainCamera.centerX, mainCamera.centerY);
+
+    const zombies = this.physics.add.group();
+
+    new NiceZombie(this, zombies, mainCamera.centerX, mainCamera.centerY);
+    new NotSoNiceZombie(this, zombies, mainCamera.centerX - 100, mainCamera.centerY - 100);
 
     this.player = new Skeleton(this);
 
     const stopPlayerMovement = () => this.player.clearTargetTile();
 
     this.physics.add.collider(houses, this.player, stopPlayerMovement);
-    this.physics.add.collider(zombie, this.player, stopPlayerMovement);
+    this.physics.add.collider(zombies, this.player, stopPlayerMovement);
 
-    this.fpsText = this.add.text(16, 16, "60 fps").setScrollFactor(0, 0);
+    this.fpsText = this.add.text(16, 16, "60 fps, 0 objects").setScrollFactor(0, 0);
     this.fpsText.depth = 1000;
 
     const keyboard = this.input.keyboard;
@@ -66,7 +77,7 @@ export class MainScene extends Scene
     if (controls.up.isDown) this.cameras.main.setZoom(this._cameraZoom.x += zoomSpeed, this._cameraZoom.y += zoomSpeed);
     else if (controls.down.isDown) this.cameras.main.setZoom(this._cameraZoom.x -= zoomSpeed, this._cameraZoom.y -= zoomSpeed);
 
-    this.fpsText.setText(`${this.game.loop.actualFps.toFixed(2)} fps`);
+    this.fpsText.setText(`${this.game.loop.actualFps.toFixed(2)} fps, ${this.children.list.length} objects`);
   }
 
 

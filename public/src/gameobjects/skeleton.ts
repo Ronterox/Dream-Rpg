@@ -4,7 +4,7 @@ import { GameObjects, Scene } from "phaser";
 
 //TODO: vector class
 //But is okay to use something simple like interface here
-interface Position
+interface IPosition
 {
   x: number,
   y: number
@@ -18,7 +18,7 @@ type AnimationFrame =
     loop: boolean
   }
 
-interface SkeletonAnimations
+interface ISkeletonAnimations
 {
   idleUp: AnimationFrame,
   idleDown: AnimationFrame,
@@ -32,18 +32,18 @@ interface SkeletonAnimations
 
 const SPRITE_ROW_OFFSET = 27 * 6;
 
-const anims: SkeletonAnimations = {
+const anims: ISkeletonAnimations = {
   idleUp: {
     startFrame: 0,
     endFrame: 3,
     frameRate: 8,
-    loop: false
+    loop: true
   },
   idleDown: {
     startFrame: SPRITE_ROW_OFFSET,
     endFrame: 3 + SPRITE_ROW_OFFSET,
     frameRate: 8,
-    loop: false
+    loop: true
   },
   walkUp: {
     startFrame: 4,
@@ -86,7 +86,7 @@ const anims: SkeletonAnimations = {
 export class Skeleton extends Phaser.Physics.Arcade.Sprite
 {
   private readonly speed: number;
-  private targetPosition: Position;
+  private targetPosition: IPosition;
   private isMoving = false;
 
   private _animationDirection: string = 'Up';
@@ -127,6 +127,8 @@ export class Skeleton extends Phaser.Physics.Arcade.Sprite
         repeat: animation.loop ? -1 : 0,
       });
     }
+
+    this.play('idleUp');
   }
 
   clearTargetTile()

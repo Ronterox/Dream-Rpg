@@ -11,6 +11,8 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
   private readonly speed: number;
   //TODO: obviously generalize this player with a tag
   public player: Skeleton;
+  //TODO: Where is max health dude, and everything else about the defense/dodging etc
+  private _health: number = 100;
 
   constructor(scene: Scene, x = WIN_WIDTH * .5, y = WIN_HEIGHT * .5, speed = 2)
   {
@@ -26,9 +28,24 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
     {
       if (this.body.touching)
       {
-        //TODO: check if player is on collision
+        //TODO: check if player is on collision with tag
         const { x: playerX, y: playerY, width: playerWidth } = this.player;
-        if (Phaser.Math.Distance.Between(this.x, this.y, playerX, playerY) < playerWidth * .5) this.setVelocity(50, 50);
+        if (Phaser.Math.Distance.Between(this.x, this.y, playerX, playerY) < playerWidth)
+        {
+          //TODO: this should be the enemy weapon
+          const knockbackForce = 2;
+          this.setDrag(0.1);
+          this.setDamping(true);
+          this.setVelocity((this.x - playerX) * knockbackForce, (this.y - playerY) * knockbackForce);
+
+          this._health -= Phaser.Math.Between(25, 50);
+
+          if (this._health <= 0)
+          {
+            //TODO: Create disable method for all gameobjects
+            this.destroy();
+          }
+        }
       }
     });
 
@@ -37,8 +54,8 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
 
   setCollider()
   {
-    const halfWidth = this.width * .5;
-    this.body.setSize(this.width * .25, halfWidth);
+    const height = this.width * .5;
+    this.setSize(this.width * .25, height);
     this.setImmovable();
   }
 }

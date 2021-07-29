@@ -44,8 +44,8 @@ export class MainScene extends Scene
 
     const zombies = this.physics.add.group();
 
-    const niceZombie = new NiceZombie(this, mainCamera.centerX, mainCamera.centerY);
-    const simpleZombie = new Zombie(this, mainCamera.centerX - 100, mainCamera.centerY - 100);
+    const niceZombie = new NiceZombie(this, 900, 200);
+    const simpleZombie = new Zombie(this, 1100, 400);
 
     this.player = new Skeleton(this);
 

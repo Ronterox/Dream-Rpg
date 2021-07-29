@@ -25,4 +25,4 @@ const config = {
 };
 
 const game = new Game(config);
-console.log(game.getTime());
+console.log(game.isRunning);

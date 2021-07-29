@@ -14,7 +14,8 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
 
     this.speed = speed;
     this.depth = y + 64;
-    this.width *= .5;
+
+    this.setTint(0xFF0000, 0x00FF00, 0x0000FF, 0xFFFF00);
 
     scene.add.existing(this);
   }
@@ -22,6 +23,6 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
   setCollider()
   {
     const halfWidth = this.width * .5;
-    this.body.setSize(this.width * .2, halfWidth).setOffset(halfWidth + 25, halfWidth + 30);
+    this.body.setSize(this.width * .25, halfWidth);
   }
 }

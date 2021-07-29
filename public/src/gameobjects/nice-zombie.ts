@@ -4,9 +4,11 @@ import { Scene } from "phaser";
 // noinspection ES6PreferShortImport
 import { MainScene } from "../scenes/main-scene";
 // noinspection ES6PreferShortImport
-import { SimpleTextBox } from "../gameobjects/ui/textbox";
+import { SimpleTextBox } from "./ui/simple-textbox";
 // noinspection ES6PreferShortImport
 import { Zombie } from "../gameobjects/zombie";
+// noinspection ES6PreferShortImport
+import { SimpleDialogue } from "../gameobjects/ui/simple-dialogue";
 
 //TODO: Generalize methods and interfaces from Skeleton class
 //TODO: let zombie walk around
@@ -18,7 +20,9 @@ export class NiceZombie extends Zombie
   {
     super(scene, x, y, speed);
 
-    this.setInteractive().setScale(2, 2);
+    this.setInteractive().input.hitArea.setTo(this.width * .25, this.height * .25, 60, 60);
+
+    const introduction = "Hello I'm a friendly Zombie, and that other one is a not so friendly Zombie."
 
     //TODO: again check for other way of doing this
     //TODO: fix zombie hitbox
@@ -26,13 +30,23 @@ export class NiceZombie extends Zombie
     this.on('pointerdown', () =>
     {
       if (this.dialogue) this.dialogue.displayAndUpdate(true);
-      else this.dialogue = new SimpleTextBox(scene as MainScene, "This is a long text. This is a long text. This is a long text. This is a long text. This is a long text. This is a long text. ");
+      else
+      {
+        this.dialogue = new SimpleTextBox(scene as MainScene, introduction);
+        this.dialogue.onConversationEnd = () =>
+        {
+          const optionSelection = new SimpleDialogue(scene as MainScene);
+          optionSelection.textBox = this.dialogue;
+        }
+      }
     });
+
+    this.clearTint();
   }
 
   setCollider()
   {
-    // super.setCollider();
+    super.setCollider();
     this.setImmovable();
   }
 }

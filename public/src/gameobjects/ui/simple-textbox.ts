@@ -71,7 +71,7 @@ function getDefaultTextBoxConfig(scene: MainScene, config: ISimpleTextBoxConfig)
 
 export class SimpleTextBox extends TextBox
 {
-  public optionsDialogue: SimpleDialogue;
+  public onConversationEnd: () => void;
 
   constructor(scene: MainScene, content = "No text", config: ISimpleTextBoxConfig = { x: 150, y: 150, wrapWidth: 500, fixedWidth: 500, fixedHeight: 100 })
   {
@@ -92,12 +92,7 @@ export class SimpleTextBox extends TextBox
       {
         if (this.isLastPage)
         {
-          if (this.optionsDialogue) this.optionsDialogue.displayAndUpdate(true);
-          else
-          {
-            this.optionsDialogue = new SimpleDialogue(scene as MainScene);
-            this.optionsDialogue.onQuit = () => this.displayAndUpdate(false);
-          }
+          this.onConversationEnd?.();
           return;
         }
 
@@ -124,7 +119,5 @@ export class SimpleTextBox extends TextBox
   {
     this.setVisible(condition);
     this.setActive(condition);
-
-    if (condition && this.isLastPage) this.optionsDialogue?.displayAndUpdate(true);
   }
 }

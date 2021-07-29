@@ -10,7 +10,7 @@ import { MAP_KEY, SPRITE_KEYS } from "../game-config";
 import { NiceZombie } from "../gameobjects/nice-zombie";
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 // noinspection ES6PreferShortImport
-import { NotSoNiceZombie } from "../gameobjects/not-so-nice-zombie";
+import { Zombie } from "../gameobjects/zombie";
 
 export class MainScene extends Scene
 {
@@ -20,7 +20,7 @@ export class MainScene extends Scene
   private cameraControls: CursorKeys;
   private player: Skeleton;
   private _cameraRotation = 0;
-  private _cameraZoom = { x: 1, y: 1 };
+  private _cameraZoom = 0;
 
   preload()
   {
@@ -44,8 +44,14 @@ export class MainScene extends Scene
 
     const zombies = this.physics.add.group();
 
-    new NiceZombie(this, zombies, mainCamera.centerX, mainCamera.centerY);
-    new NotSoNiceZombie(this, zombies, mainCamera.centerX - 100, mainCamera.centerY - 100);
+    const niceZombie = new NiceZombie(this, mainCamera.centerX, mainCamera.centerY);
+    const simpleZombie = new Zombie(this, mainCamera.centerX - 100, mainCamera.centerY - 100);
+
+    zombies.add(niceZombie);
+    zombies.add(simpleZombie);
+
+    niceZombie.setCollider();
+    simpleZombie.setCollider();
 
     this.player = new Skeleton(this);
 
@@ -71,11 +77,27 @@ export class MainScene extends Scene
     const controls = this.cameraControls;
     const scrollSpeed = 0.01, zoomSpeed = 0.1;
 
-    if (controls.right.isDown || controls.up.isDown) this.cameras.main.setRotation(this._cameraRotation += scrollSpeed);
-    else if (controls.left.isDown || controls.down.isDown) this.cameras.main.setRotation(this._cameraRotation -= scrollSpeed);
+    if (controls.right.isDown || controls.up.isDown)
+    {
+      this._cameraRotation += scrollSpeed;
+      this.cameras.main.setRotation(this._cameraRotation);
+    }
+    else if (controls.left.isDown || controls.down.isDown)
+    {
+      this._cameraRotation -= scrollSpeed;
+      this.cameras.main.setRotation(this._cameraRotation);
+    }
 
-    if (controls.up.isDown) this.cameras.main.setZoom(this._cameraZoom.x += zoomSpeed, this._cameraZoom.y += zoomSpeed);
-    else if (controls.down.isDown) this.cameras.main.setZoom(this._cameraZoom.x -= zoomSpeed, this._cameraZoom.y -= zoomSpeed);
+    if (controls.up.isDown)
+    {
+      this._cameraZoom += zoomSpeed;
+      this.cameras.main.setZoom(this._cameraZoom, this._cameraZoom);
+    }
+    else if (controls.down.isDown)
+    {
+      this._cameraZoom -= zoomSpeed;
+      this.cameras.main.setZoom(this._cameraZoom, this._cameraZoom);
+    }
 
     this.fpsText.setText(`${this.game.loop.actualFps.toFixed(2)} fps, ${this.children.list.length} objects`);
   }

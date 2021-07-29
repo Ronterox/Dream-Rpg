@@ -98,11 +98,8 @@ export class SimpleDialogue extends Dialog
 
   setDesign()
   {
-    // const graphics = scene.add.graphics();
-    // graphics.setDepth(999);
     this.setDraggable('background')   // Draggable-background
       .layout()
-      // .drawBounds(graphics, 0xff0000)
       .popUp(1000).setDepth(1000);
   }
 

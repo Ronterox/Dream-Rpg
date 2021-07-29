@@ -11,7 +11,7 @@ const config = {
   backgroundColor: '#000',
   physics: {
     default: 'arcade',
-    arcade: { gravity: { y: 0 }, debug: false }
+    arcade: { gravity: { y: 0 }, debug: true }
   },
   plugins: {
     scene: [{
@@ -24,4 +24,5 @@ const config = {
   scene: [MainScene]
 };
 
-new Game(config);
+const game = new Game(config);
+console.log(game.getTime());

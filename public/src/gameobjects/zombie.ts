@@ -1,8 +1,9 @@
 // noinspection ES6PreferShortImport
 import { SPRITE_KEYS, WIN_HEIGHT, WIN_WIDTH } from "../game-config";
-import { Scene } from "phaser";
+import { GameObjects, Scene } from "phaser";
 // noinspection ES6PreferShortImport
 import { Skeleton } from "./skeleton";
+import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
 
 //TODO: Generalize methods and interfaces from Skeleton class
 //TODO: let zombie walk around
@@ -14,6 +15,8 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
   //TODO: Where is max health dude, and everything else about the defense/dodging etc
   private _health: number = 100;
 
+  private damageText: GameObjects.Text;
+
   constructor(scene: Scene, x = WIN_WIDTH * .5, y = WIN_HEIGHT * .5, speed = 2)
   {
     super(scene, x, y, SPRITE_KEYS.zombie);
@@ -23,6 +26,8 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
 
     this.setInteractive().input.hitArea.setTo(this.width * .25, this.height * .25, 60, 60);
     this.setTint(0xFF0000, 0x00FF00, 0x0000FF, 0xFFFF00);
+
+    this.damageText = scene.add.text(this.x, this.y, '', { fontSize: '35px', fill: 'red' } as TextStyle);
 
     this.on('pointerdown', () =>
     {
@@ -38,7 +43,13 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
           this.setDamping(true);
           this.setVelocity((this.x - playerX) * knockbackForce, (this.y - playerY) * knockbackForce);
 
-          this._health -= Phaser.Math.Between(25, 50);
+          const damage = Phaser.Math.Between(25, 50);
+          this._health -= damage;
+
+          //TODO: tween an animation
+          this.damageText.setPosition(this.x, this.y);
+          this.damageText.setText(`-${damage}`);
+          this.damageText.depth = this.y * 64;
 
           if (this._health <= 0)
           {

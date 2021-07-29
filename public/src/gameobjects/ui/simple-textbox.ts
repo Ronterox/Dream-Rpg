@@ -2,8 +2,7 @@ import { GameObjects } from "phaser";
 import { TextBox } from "phaser3-rex-plugins/templates/ui/ui-components";
 // noinspection ES6PreferShortImport
 import { MainScene } from "../../scenes/main-scene";
-import GameObject = Phaser.GameObjects.GameObject;
-import { SimpleDialogue } from "./simple-dialogue";
+import GameObject = GameObjects.GameObject;
 
 const COLOR_PRIMARY = 0x4e342e;
 const COLOR_LIGHT = 0x7b5e57;
@@ -78,7 +77,6 @@ export class SimpleTextBox extends TextBox
     super(scene, getDefaultTextBoxConfig(scene, config));
 
     this.setOrigin(0)
-      .layout()
       .setInteractive()
       .on('pointerdown', () =>
       {
@@ -108,7 +106,7 @@ export class SimpleTextBox extends TextBox
           repeat: 0, // -1: infinity
           yoyo: false
         });
-      }).setDepth(1000).start(content, 25);
+      }).setDepth(1000).start(content, 25).layout();
     //.on('type', function () {
     //})
 

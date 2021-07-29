@@ -11,7 +11,7 @@ const config = {
   backgroundColor: '#000',
   physics: {
     default: 'arcade',
-    arcade: { gravity: { y: 0 }, debug: true }
+    arcade: { gravity: { y: 0 }, debug: false }
   },
   plugins: {
     scene: [{
@@ -25,4 +25,4 @@ const config = {
 };
 
 const game = new Game(config);
-console.log(game.isRunning);
+console.log('Game Started! ' + game.loop.actualFps);

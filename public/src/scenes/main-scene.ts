@@ -1,16 +1,16 @@
 import { GameObjects, Scene } from "phaser";
 import tilemap from "../../assets/sprites/isometric-grass-and-water.json";
 import images from "../../assets/sprites/*.png";
-import CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 // noinspection ES6PreferShortImport
 import { Skeleton } from "../gameobjects/skeleton";
 // noinspection ES6PreferShortImport
 import { MAP_KEY, SPRITE_KEYS } from "../game-config";
 // noinspection ES6PreferShortImport
+import { Zombie } from "../gameobjects/zombie";
+// noinspection ES6PreferShortImport
 import { NiceZombie } from "../gameobjects/nice-zombie";
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
-// noinspection ES6PreferShortImport
-import { Zombie } from "../gameobjects/zombie";
+import CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 
 export class MainScene extends Scene
 {
@@ -47,16 +47,19 @@ export class MainScene extends Scene
     const niceZombie = new NiceZombie(this, mainCamera.centerX, mainCamera.centerY);
     const simpleZombie = new Zombie(this, mainCamera.centerX - 100, mainCamera.centerY - 100);
 
+    this.player = new Skeleton(this);
+
     zombies.add(niceZombie);
     zombies.add(simpleZombie);
 
-    niceZombie.setCollider();
-    simpleZombie.setCollider();
-
-    this.player = new Skeleton(this);
+    zombies.children.iterate(z =>
+    {
+      const zombie = z as Zombie;
+      zombie.player = this.player;
+      zombie.setCollider();
+    });
 
     const stopPlayerMovement = () => this.player.clearTargetTile();
-
     this.physics.add.collider(houses, this.player, stopPlayerMovement);
     this.physics.add.collider(zombies, this.player, stopPlayerMovement);
 
@@ -153,18 +156,19 @@ export class MainScene extends Scene
     const houses = this.physics.add.staticGroup();
 
     const house_1: GameObjects.Image = houses.create(240, 370, SPRITE_KEYS.house);
-
-    const size = { width: house_1.width * .5, height: house_1.height * .5 };
-
-    house_1.depth = house_1.y + 86;
-    (house_1.body as Phaser.Physics.Arcade.Body).setSize(size.width, size.height);
-
     const house_2: GameObjects.Image = houses.create(1300, 290, SPRITE_KEYS.house);
-    house_2.depth = house_2.y + 86;
-    (house_2.body as Phaser.Physics.Arcade.Body).setSize(size.width, size.height);
 
     houses.add(house_1);
     houses.add(house_2);
+
+    houses.children.iterate(h =>
+    {
+      const house = h as GameObjects.Image;
+      house.depth = house.y + 86;
+
+      const size = { width: house_1.width * .5, height: house_1.height * .5 };
+      (house.body as Phaser.Physics.Arcade.Body).setSize(size.width, size.height);
+    });
 
     return houses;
   }

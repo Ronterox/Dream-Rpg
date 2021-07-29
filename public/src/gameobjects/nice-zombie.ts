@@ -6,9 +6,9 @@ import { MainScene } from "../scenes/main-scene";
 // noinspection ES6PreferShortImport
 import { SimpleTextBox } from "./ui/simple-textbox";
 // noinspection ES6PreferShortImport
-import { Zombie } from "../gameobjects/zombie";
+import { Zombie } from "./zombie";
 // noinspection ES6PreferShortImport
-import { SimpleDialogue } from "../gameobjects/ui/simple-dialogue";
+import { SimpleDialogue } from "./ui/simple-dialogue";
 
 //TODO: Generalize methods and interfaces from Skeleton class
 //TODO: let zombie walk around
@@ -20,8 +20,6 @@ export class NiceZombie extends Zombie
   {
     super(scene, x, y, speed);
 
-    this.setInteractive().input.hitArea.setTo(this.width * .25, this.height * .25, 60, 60);
-
     const introduction = "Hello I'm a friendly Zombie, and that other one is a not so friendly Zombie."
 
     //TODO: again check for other way of doing this
@@ -32,7 +30,10 @@ export class NiceZombie extends Zombie
       if (this.dialogue) this.dialogue.displayAndUpdate(true);
       else
       {
-        this.dialogue = new SimpleTextBox(scene as MainScene, introduction);
+        const mainCamera = scene.cameras.main;
+        const fixedHeight = 100;
+        const fixedWidth = 500;
+        this.dialogue = new SimpleTextBox(scene as MainScene, introduction, { x: mainCamera.centerX * .5 - fixedWidth, y: mainCamera.centerY - fixedHeight, wrapWidth: 500, fixedWidth, fixedHeight });
         this.dialogue.onConversationEnd = () =>
         {
           const optionSelection = new SimpleDialogue(scene as MainScene);
@@ -42,11 +43,5 @@ export class NiceZombie extends Zombie
     });
 
     this.clearTint();
-  }
-
-  setCollider()
-  {
-    super.setCollider();
-    this.setImmovable();
   }
 }

@@ -2,7 +2,7 @@ import { Dialog } from "phaser3-rex-plugins/templates/ui/ui-components.js";
 import { Scene } from "phaser";
 // noinspection ES6PreferShortImport
 import { MainScene } from "../../scenes/main-scene";
-import { SimpleTextBox } from "~/gameobjects/ui/simple-textbox";
+import { SimpleTextBox } from "./simple-textbox";
 
 const createLabel = function (scene: MainScene, text: string = "No Text")
 {
@@ -28,8 +28,10 @@ const createLabel = function (scene: MainScene, text: string = "No Text")
 //TODO: Remove hardcoding of options and make it more dynamic
 const option1 = 'I will kill all Zombies!';
 const answer1 = 'I guess you are that smart aren\'t you';
+
 const option2 = 'Hello Mr. Zombie, how are you?';
 const answer2 = 'Well I\'m feeling really good even though I\'m half dead';
+
 const option3 = 'Cool I guess...';
 const answer3 = 'Yeah, pretty cool...';
 

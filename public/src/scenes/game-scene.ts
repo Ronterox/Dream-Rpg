@@ -95,7 +95,9 @@ export default class GameScene extends Scene
     scene.physics.add.overlap((this.player as GameObject), stars, (player, star) =>
     {
       (star as PhysicsType.Image).disableBody(true, true);
-      this.scoreText.setText('Score: ' + (this.score += 10));
+
+      this.score += 10;
+      this.scoreText.setText(`Score: ${this.score}`);
 
       if (stars.countActive(true) === 0)
       {

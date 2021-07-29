@@ -2,6 +2,7 @@ import { Dialog } from "phaser3-rex-plugins/templates/ui/ui-components.js";
 import { Scene } from "phaser";
 // noinspection ES6PreferShortImport
 import { MainScene } from "../../scenes/main-scene";
+import { SimpleTextBox } from "./simple-textbox";
 
 const createLabel = function (scene: MainScene, text: string = "No Text")
 {
@@ -24,6 +25,16 @@ const createLabel = function (scene: MainScene, text: string = "No Text")
   });
 };
 
+//TODO: Remove hardcoding of options and make it more dynamic
+const option1 = 'I will kill all Zombies!';
+const answer1 = 'I guess you are that smart aren\'t you';
+
+const option2 = 'Hello Mr. Zombie, how are you?';
+const answer2 = 'Well I\'m feeling really good even though I\'m half dead';
+
+const option3 = 'Cool I guess...';
+const answer3 = 'Yeah, pretty cool...';
+
 function getDefaultConfig(scene: MainScene): Dialog.IConfig
 {
   return {
@@ -33,14 +44,14 @@ function getDefaultConfig(scene: MainScene): Dialog.IConfig
 
     background: scene.rexUI.add.roundRectangle(0, 0, 100, 100, 20, 0x1565c0),
 
-    title: createLabel(scene, 'Speaking to Mr. NiceZombie'),
+    // title: createLabel(scene, 'Speaking to Mr. NiceZombie'),
 
     toolbar: [createLabel(scene, 'X')],
 
     choices: [
-      createLabel(scene, 'Howdy'),
-      createLabel(scene, 'Hello'),
-      createLabel(scene, 'How is it going?')
+      createLabel(scene, option1),
+      createLabel(scene, option2),
+      createLabel(scene, option3)
     ],
 
     space: {
@@ -86,7 +97,8 @@ function getDefaultConfig(scene: MainScene): Dialog.IConfig
 
 export class SimpleDialogue extends Dialog
 {
-  public onQuit: () => void;
+  //TODO: Change this insane connection between simple dialogue and textbox;
+  public textBox: SimpleTextBox;
 
   constructor(scene: MainScene, config: Dialog.IConfig = getDefaultConfig(scene))
   {
@@ -98,11 +110,8 @@ export class SimpleDialogue extends Dialog
 
   setDesign()
   {
-    // const graphics = scene.add.graphics();
-    // graphics.setDepth(999);
     this.setDraggable('background')   // Draggable-background
       .layout()
-      // .drawBounds(graphics, 0xff0000)
       .popUp(1000).setDepth(1000);
   }
 
@@ -114,11 +123,29 @@ export class SimpleDialogue extends Dialog
     //TODO: find a better way of detecting choices
     this.on('button.click', (button, groupName: string, index: number) =>
     {
-      if (button.text === 'X')
+      //TODO: Change hardcode conversation
+      switch (button.text)
       {
-        this.displayAndUpdate(false);
-        this.onQuit();
+        case option1:
+          //TODO: check why the start is not reusing the textbox and creating new things
+          this.textBox.start(answer1, 10);
+          break;
+        case option2:
+          this.textBox.start(answer2, 25);
+          break;
+        case option3:
+          this.textBox.start(answer3, 50);
+          break;
+        default:
+          this.textBox.start(Math.round(Math.random()) === 0 ? "Cya" : "Goodbye Friend", 50);
+          this.textBox.onConversationEnd = () =>
+          {
+            this.textBox.displayAndUpdate(false);
+            this.displayAndUpdate(false);
+          }
+          return;
       }
+      this.displayAndUpdate(false);
       print.text += groupName + '-' + index + ': ' + button.text + '\n';
     })
       .on('button.over', (button) => button.getElement('background').setStrokeStyle(1, 0xffffff))

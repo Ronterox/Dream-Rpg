@@ -2,8 +2,7 @@ import { GameObjects } from "phaser";
 import { TextBox } from "phaser3-rex-plugins/templates/ui/ui-components";
 // noinspection ES6PreferShortImport
 import { MainScene } from "../../scenes/main-scene";
-import GameObject = Phaser.GameObjects.GameObject;
-import { SimpleDialogue } from "./simple-dialogue";
+import GameObject = GameObjects.GameObject;
 
 const COLOR_PRIMARY = 0x4e342e;
 const COLOR_LIGHT = 0x7b5e57;
@@ -71,14 +70,13 @@ function getDefaultTextBoxConfig(scene: MainScene, config: ISimpleTextBoxConfig)
 
 export class SimpleTextBox extends TextBox
 {
-  public optionsDialogue: SimpleDialogue;
+  public onConversationEnd: () => void;
 
   constructor(scene: MainScene, content = "No text", config: ISimpleTextBoxConfig = { x: 150, y: 150, wrapWidth: 500, fixedWidth: 500, fixedHeight: 100 })
   {
     super(scene, getDefaultTextBoxConfig(scene, config));
 
     this.setOrigin(0)
-      .layout()
       .setInteractive()
       .on('pointerdown', () =>
       {
@@ -92,12 +90,7 @@ export class SimpleTextBox extends TextBox
       {
         if (this.isLastPage)
         {
-          if (this.optionsDialogue) this.optionsDialogue.displayAndUpdate(true);
-          else
-          {
-            this.optionsDialogue = new SimpleDialogue(scene as MainScene);
-            this.optionsDialogue.onQuit = () => this.displayAndUpdate(false);
-          }
+          this.onConversationEnd?.();
           return;
         }
 
@@ -113,7 +106,7 @@ export class SimpleTextBox extends TextBox
           repeat: 0, // -1: infinity
           yoyo: false
         });
-      }).setDepth(1000).start(content, 25);
+      }).setDepth(1000).start(content, 25).layout();
     //.on('type', function () {
     //})
 
@@ -124,7 +117,5 @@ export class SimpleTextBox extends TextBox
   {
     this.setVisible(condition);
     this.setActive(condition);
-
-    if (condition && this.isLastPage) this.optionsDialogue?.displayAndUpdate(true);
   }
 }

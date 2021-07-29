@@ -24,4 +24,5 @@ const config = {
   scene: [MainScene]
 };
 
-new Game(config);
+const game = new Game(config);
+console.log('Game Started! ' + game.loop.actualFps);

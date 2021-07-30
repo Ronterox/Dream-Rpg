@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from "phaser";
+import { GameObjects } from "phaser";
 import tilemap from "../../assets/sprites/isometric-grass-and-water.json";
 import images from "../../assets/sprites/*.png";
 // noinspection ES6PreferShortImport
@@ -9,16 +9,12 @@ import { MAP_KEY, SPRITE_KEYS } from "../game-config";
 import { Zombie } from "../gameobjects/zombie";
 // noinspection ES6PreferShortImport
 import { NiceZombie } from "../gameobjects/nice-zombie";
-import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 import CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
-import Label = RexUIPlugin.Label;
-import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
+import { PluginScene } from "./plugin-scene";
+import { UI_SCENE_KEY } from "./ui-scene";
 
-export class MainScene extends Scene
+export class MainScene extends PluginScene
 {
-  public rexUI: RexUIPlugin;
-
-  private fpsText: GameObjects.Text;
   private cameraControls: CursorKeys;
   private player: Skeleton;
   private _cameraRotation = 0;
@@ -74,55 +70,13 @@ export class MainScene extends Scene
       (zombie as Zombie).takeDamage({ x: fireImage.x, y: fireImage.y }, Phaser.Math.Between(10, 20));
     });
 
-    this.fpsText = this.add.text(16, 16, "60 fps, 0 objects").setScrollFactor(0, 0);
-    this.fpsText.depth = 1000;
-
     const keyboard = this.input.keyboard;
 
     this.cameraControls = keyboard.createCursorKeys();
 
     mainCamera.startFollow(this.player);
 
-    this.createButtons();
-  }
-
-  //TODO: understand this buttons and all ui to scene ui
-  public createButtons()
-  {
-    const COLOR_PRIMARY = 0x4e342e;
-    const COLOR_LIGHT = 0x7b5e57;
-    const COLOR_DARK = 0x260e04;
-
-    const createButton = (scene: MainScene, text: string): Label => scene.rexUI.add.label({
-      width: 100,
-      height: 40,
-      background: scene.rexUI.add.roundRectangle(0, 0, 0, 0, 20, COLOR_LIGHT),
-      text: scene.add.text(0, 0, text, { fontSize: "18px" } as TextStyle),
-      space: { left: 10, right: 10, }
-    });
-
-    const buttons = this.rexUI.add.buttons({
-      x: 100, y: 300,
-      orientation: 'y',
-      buttons: [createButton(this, 'Spell')],
-      space: { item: 8 }
-    }).layout().setScrollFactor(0);
-
-    buttons.setDepth(1000);
-
-    buttons.on('button.click', (button: Label, index: number) =>
-    {
-      buttons.setButtonEnable(index, false);
-      button.setAlpha(0.5);
-      this.player.activateFire();
-
-      setTimeout(() =>
-      {
-        buttons.setButtonEnable(index, true);
-        this.player.activateFire(false);
-        button.clearAlpha();
-      }, 1000);
-    });
+    this.scene.launch(UI_SCENE_KEY, { player: this.player, scene: this });
   }
 
   public update()
@@ -153,8 +107,6 @@ export class MainScene extends Scene
       this._cameraZoom -= zoomSpeed;
       this.cameras.main.setZoom(this._cameraZoom, this._cameraZoom);
     }
-
-    this.fpsText.setText(`${this.game.loop.actualFps.toFixed(2)} fps, ${this.children.list.length} objects`);
   }
 
 
@@ -195,7 +147,7 @@ export class MainScene extends Scene
         //TODO: check how to get the click event of the object itself
         tile.on('pointerdown', () => this.player.setTarget(tile));
 
-        tile.depth = centerY + ty;
+        tile.setDepth(centerY + ty);
 
         i++;
       }
@@ -216,7 +168,7 @@ export class MainScene extends Scene
     houses.children.iterate(h =>
     {
       const house = h as GameObjects.Image;
-      house.depth = house.y + 86;
+      house.setDepth(house.y + 86);
 
       const size = { width: house_1.width * .5, height: house_1.height * .5 };
       (house.body as Phaser.Physics.Arcade.Body).setSize(size.width, size.height);

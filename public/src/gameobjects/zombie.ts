@@ -21,9 +21,8 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
     super(scene, x, y, SPRITE_KEYS.zombie);
     this.name = "Zombie";
     this.speed = speed;
-    this.depth = y + 64;
 
-    this.setInteractive().input.hitArea.setTo(this.width * .25, this.height * .25, 60, 60);
+    this.setDepth(y + 64).setInteractive().input.hitArea.setTo(this.width * .25, this.height * .25, 60, 60);
     this.setTint(0xFF0000, 0x00FF00, 0x0000FF, 0xFFFF00);
 
     this.damageText = scene.add.text(this.x, this.y, '', { fontSize: '35px', fill: 'red' } as TextStyle);
@@ -60,7 +59,7 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
     //TODO: tween an animation
     this.damageText.setPosition(this.x, this.y);
     this.damageText.setText(`-${damage}`);
-    this.damageText.depth = this.y * 64;
+    this.damageText.setDepth(this.y * 2 );
 
     if (this._health <= 0)
     {

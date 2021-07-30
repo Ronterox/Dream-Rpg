@@ -97,7 +97,7 @@ export class Skeleton extends Physics.Arcade.Sprite
     super(scene, x, y, SPRITE_KEYS.skeleton);
     this.name = "Player";
     this.speed = speed;
-    this.depth = y + 64;
+    this.setDepth(y + 64);
     this.targetPosition = { x, y };
     this.width *= .5;
 
@@ -143,11 +143,7 @@ export class Skeleton extends Physics.Arcade.Sprite
       this._fire.setPosition(x, y);
 
       const closestEnemy = this.scene.physics.closest(this) as Physics.Arcade.Body;
-      if (closestEnemy)
-      {
-        this._fire.setVelocity(closestEnemy.x - x, closestEnemy.y - y);
-        this._fire.depth = this._fire.y * 100;
-      }
+      if (closestEnemy) this._fire.setVelocity(closestEnemy.x - x, closestEnemy.y - y).setDepth(this._fire.y * 2);
     }
   }
 

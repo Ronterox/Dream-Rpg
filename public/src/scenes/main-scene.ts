@@ -11,6 +11,10 @@ import { Zombie } from "../gameobjects/zombie";
 import { NiceZombie } from "../gameobjects/nice-zombie";
 import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 import CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
+import Label = RexUIPlugin.Label;
+import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
+import UIPlugins from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
+import Buttons = UIPlugins.Buttons;
 
 export class MainScene extends Scene
 {
@@ -71,6 +75,47 @@ export class MainScene extends Scene
     this.cameraControls = keyboard.createCursorKeys();
 
     mainCamera.startFollow(this.player);
+
+    this.createButtons();
+  }
+
+  //TODO: understand this buttons and all ui to scene ui
+  createButtons()
+  {
+    const COLOR_PRIMARY = 0x4e342e;
+    const COLOR_LIGHT = 0x7b5e57;
+    const COLOR_DARK = 0x260e04;
+
+    const createButton = (scene: MainScene, text: string): Label => scene.rexUI.add.label({
+      width: 100,
+      height: 40,
+      background: scene.rexUI.add.roundRectangle(0, 0, 0, 0, 20, COLOR_LIGHT),
+      text: scene.add.text(0, 0, text, { fontSize: "18px" } as TextStyle),
+      space: { left: 10, right: 10, }
+    });
+
+    const buttons = this.rexUI.add.buttons({
+      x: 100, y: 300,
+      orientation: 'y',
+
+      buttons: [
+        createButton(this, 'Spell'),
+      ],
+
+      space: { item: 8 }
+
+    }).layout()
+
+    buttons.on('button.click', (button: Label, index: number) =>
+    {
+      buttons.setButtonEnable(index, false);
+      button.setAlpha(0.5);
+      setTimeout(() =>
+      {
+        buttons.setButtonEnable(index, true);
+        button.clearAlpha();
+      }, 1000);
+    });
   }
 
   update()

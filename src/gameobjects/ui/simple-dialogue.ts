@@ -37,12 +37,19 @@ const answer3 = 'Yeah, pretty cool...';
 
 function getDefaultConfig(scene: MainScene): Dialog.IConfig
 {
+  //TODO: make a function for this repeated code
+  const mainCamera = scene.cameras.main;
+  const mainResizer = mainCamera.centerX > mainCamera.centerY ? mainCamera.centerX : mainCamera.centerY;
+
+  const fixedHeight = mainResizer * .3, fixedWidth = mainResizer * .5;
+  const x = mainCamera.centerX - fixedWidth, y = mainCamera.centerY - fixedHeight;
+
   return {
     x: 400,
     y: 300,
     width: 500,
 
-    background: scene.rexUI.add.roundRectangle(0, 0, 100, 100, 20, 0x1565c0),
+    background: scene.rexUI.add.roundRectangle(x, y, fixedWidth, fixedHeight, 20, 0x1565c0),
 
     // title: createLabel(scene, 'Speaking to Mr. NiceZombie'),
 

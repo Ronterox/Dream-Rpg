@@ -14,7 +14,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": "./public/src",
+    "baseUrl": "./src",
     "strictPropertyInitialization": false,
     "paths": {
       "~/*": ["./*"]
@@ -28,6 +28,6 @@
     ]
   },
   "include": [
-    "public/src/**/*"
+    "src/**/*"
   ]
 }

@@ -31,10 +31,17 @@ export class NiceZombie extends Zombie
       if (this.dialogue) this.dialogue.displayAndUpdate(true);
       else
       {
+        //TODO: make a function for this repeated code
         const mainCamera = scene.cameras.main;
-        const fixedHeight = 100;
-        const fixedWidth = 500;
-        this.dialogue = new SimpleTextBox(scene as MainScene, introduction, { x: mainCamera.centerX - fixedWidth, y: mainCamera.centerY, wrapWidth: 500, fixedWidth, fixedHeight });
+        const mainResizer = screen.orientation.type === "landscape-primary" ? mainCamera.centerX : mainCamera.centerY;
+
+        const fixedHeight = mainResizer * .3, fixedWidth = mainResizer * .5;
+        const wrapWidth = fixedWidth;
+
+        const x = mainCamera.centerX - fixedWidth, y = mainCamera.centerY - fixedHeight;
+
+        //TODO: spawn all UIs on ui scene
+        this.dialogue = new SimpleTextBox(scene as MainScene, introduction, { x, y, wrapWidth, fixedWidth, fixedHeight });
         this.dialogue.onConversationEnd = () =>
         {
           //TODO: appear simple dialogue on canvas screen

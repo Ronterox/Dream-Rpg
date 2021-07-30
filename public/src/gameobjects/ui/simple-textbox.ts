@@ -113,7 +113,7 @@ export class SimpleTextBox extends TextBox
     scene.add.existing(this);
   }
 
-  displayAndUpdate(condition: boolean)
+  public displayAndUpdate(condition: boolean = true)
   {
     this.setVisible(condition);
     this.setActive(condition);

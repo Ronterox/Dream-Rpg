@@ -13,8 +13,6 @@ import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js';
 import CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 import Label = RexUIPlugin.Label;
 import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
-import UIPlugins from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
-import Buttons = UIPlugins.Buttons;
 
 export class MainScene extends Scene
 {
@@ -26,7 +24,7 @@ export class MainScene extends Scene
   private _cameraRotation = 0;
   private _cameraZoom = 0;
 
-  preload()
+  public preload()
   {
     this.load.json(MAP_KEY, tilemap);
 
@@ -36,9 +34,11 @@ export class MainScene extends Scene
     this.load.spritesheet(SPRITE_KEYS.zombie, images.zombie, { frameWidth: 128, frameHeight: 128 });
 
     this.load.image(SPRITE_KEYS.house, images.rem_0002);
+    //TODO: fix fire size, to smaller, right now its 256x256
+    this.load.image(SPRITE_KEYS.fire, images.fire);
   }
 
-  create()
+  public create()
   {
     this.buildMap();
 
@@ -66,6 +66,13 @@ export class MainScene extends Scene
     const stopPlayerMovement = () => this.player.clearTargetTile();
     this.physics.add.collider(houses, this.player, stopPlayerMovement);
     this.physics.add.collider(zombies, this.player, stopPlayerMovement);
+    //TODO: this overlap addition should be created more dynamically
+    this.physics.add.overlap(zombies, this.player._fire, (fire, zombie) =>
+    {
+      const fireImage = fire as GameObjects.Image;
+      //TODO: damage of spell selected by player
+      (zombie as Zombie).takeDamage({ x: fireImage.x, y: fireImage.y }, Phaser.Math.Between(10, 20));
+    });
 
     this.fpsText = this.add.text(16, 16, "60 fps, 0 objects").setScrollFactor(0, 0);
     this.fpsText.depth = 1000;
@@ -80,7 +87,7 @@ export class MainScene extends Scene
   }
 
   //TODO: understand this buttons and all ui to scene ui
-  createButtons()
+  public createButtons()
   {
     const COLOR_PRIMARY = 0x4e342e;
     const COLOR_LIGHT = 0x7b5e57;
@@ -97,28 +104,26 @@ export class MainScene extends Scene
     const buttons = this.rexUI.add.buttons({
       x: 100, y: 300,
       orientation: 'y',
-
-      buttons: [
-        createButton(this, 'Spell'),
-      ],
-
+      buttons: [createButton(this, 'Spell')],
       space: { item: 8 }
-
-    }).layout()
+    }).layout();
 
     buttons.on('button.click', (button: Label, index: number) =>
     {
       buttons.setButtonEnable(index, false);
       button.setAlpha(0.5);
+      this.player.activateFire();
+
       setTimeout(() =>
       {
         buttons.setButtonEnable(index, true);
+        this.player.activateFire(false);
         button.clearAlpha();
       }, 1000);
     });
   }
 
-  update()
+  public update()
   {
     this.player.update();
 
@@ -151,7 +156,7 @@ export class MainScene extends Scene
   }
 
 
-  buildMap()
+  public buildMap()
   {
     //  Parse the data out of the map
     const data = this.cache.json.get(MAP_KEY);
@@ -195,7 +200,7 @@ export class MainScene extends Scene
     }
   }
 
-  placeHouses()
+  public placeHouses()
   {
     //TODO: find how to create houses with simple iteration
     const houses = this.physics.add.staticGroup();

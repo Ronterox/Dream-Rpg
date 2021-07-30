@@ -19,6 +19,7 @@ export class NiceZombie extends Zombie
   constructor(scene: Scene, x = WIN_WIDTH * .5, y = WIN_HEIGHT * .5, speed = 2)
   {
     super(scene, x, y, speed);
+    this.name = "Nice Zombie";
 
     const introduction = "Hello I'm a friendly Zombie, and that other one is a not so friendly Zombie."
 

@@ -1,10 +1,9 @@
 // noinspection ES6PreferShortImport
 import { SPRITE_KEYS, WIN_HEIGHT, WIN_WIDTH } from "../game-config";
-import { GameObjects, Scene } from "phaser";
-
+import { GameObjects, Physics, Scene } from "phaser";
 //TODO: vector class
 //But is okay to use something simple like interface here
-interface IPosition
+export interface IPosition
 {
   x: number,
   y: number
@@ -83,19 +82,20 @@ const anims: ISkeletonAnimations = {
   }
 };
 
-export class Skeleton extends Phaser.Physics.Arcade.Sprite
+export class Skeleton extends Physics.Arcade.Sprite
 {
   private readonly speed: number;
   private targetPosition: IPosition;
-  private isMoving = false;
+  public _fire: Physics.Arcade.Sprite;
 
+  private isMoving = false;
   private _animationDirection: string = 'Up';
   private _targetTile?: GameObjects.Image;
 
   constructor(scene: Scene, x = WIN_WIDTH * .5, y = WIN_HEIGHT * .5, speed = 2)
   {
     super(scene, x, y, SPRITE_KEYS.skeleton);
-
+    this.name = "Player";
     this.speed = speed;
     this.depth = y + 64;
     this.targetPosition = { x, y };
@@ -104,15 +104,16 @@ export class Skeleton extends Phaser.Physics.Arcade.Sprite
     scene.physics.add.existing(scene.add.existing(this));
     this.body.setSize(this.width * .5, this.width).setOffset(this.width * .5 + 15, this.width * .5);
 
-    this.awake();
-  }
-
-  awake()
-  {
     this.setAnimations();
+
+    this._fire = scene.physics.add.sprite(this.x, this.y, SPRITE_KEYS.fire);
+    this._fire.setScale(.25, .25);
+    this._fire.name = "Fire Spell";
+
+    this.activateFire(false);
   }
 
-  setAnimations()
+  private setAnimations()
   {
     for (const key in anims)
     {
@@ -131,7 +132,26 @@ export class Skeleton extends Phaser.Physics.Arcade.Sprite
     this.play('idleUp');
   }
 
-  clearTargetTile()
+  public activateFire(activate: boolean = true)
+  {
+    this._fire.setActive(activate);
+    this._fire.setVisible(activate);
+
+    if (activate)
+    {
+      const x = this.x, y = this.y;
+      this._fire.setPosition(x, y);
+
+      const closestEnemy = this.scene.physics.closest(this) as Physics.Arcade.Body;
+      if (closestEnemy)
+      {
+        this._fire.setVelocity(closestEnemy.x - x, closestEnemy.y - y);
+        this._fire.depth = this._fire.y * 100;
+      }
+    }
+  }
+
+  public clearTargetTile()
   {
     if (this._targetTile)
     {
@@ -146,7 +166,7 @@ export class Skeleton extends Phaser.Physics.Arcade.Sprite
     }
   }
 
-  setTarget(tile: GameObjects.Image)
+  public setTarget(tile: GameObjects.Image)
   {
     this.clearTargetTile();
 
@@ -190,7 +210,7 @@ export class Skeleton extends Phaser.Physics.Arcade.Sprite
     this.setVelocity(velocity.x, velocity.y);
   }
 
-  update()
+  public update()
   {
     if (!this.isMoving) return;
 

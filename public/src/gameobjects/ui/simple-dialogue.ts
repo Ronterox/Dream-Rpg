@@ -104,20 +104,22 @@ export class SimpleDialogue extends Dialog
   {
     super(scene, config);
     this.setDesign();
-    this.setInteractions(scene);
-    this.addAnimations(scene);
+    this.setInteractions();
+    this.addAnimations();
+    //TODO: move to another scene for static ui
+    this.setScrollFactor(0);
   }
 
-  setDesign()
+  private setDesign()
   {
     this.setDraggable('background')   // Draggable-background
       .layout()
       .popUp(1000).setDepth(1000);
   }
 
-  setInteractions(scene: Scene)
+  private setInteractions()
   {
-    const print = scene.add.text(0, 0, '');
+    const print = this.scene.add.text(0, 0, '');
 
     //TODO: find which type of button is this
     //TODO: find a better way of detecting choices
@@ -152,13 +154,13 @@ export class SimpleDialogue extends Dialog
       .on('button.out', (button) => button.getElement('background').setStrokeStyle());
   }
 
-  displayAndUpdate(condition: boolean)
+  public displayAndUpdate(condition: boolean = true)
   {
     this.setActive(condition);
     this.setVisible(condition);
   }
 
-  addAnimations(scene: Scene)
+  private addAnimations(scene: Scene = this.scene)
   {
     scene.tweens.add({
       targets: this,

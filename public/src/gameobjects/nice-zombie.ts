@@ -19,6 +19,7 @@ export class NiceZombie extends Zombie
   constructor(scene: Scene, x = WIN_WIDTH * .5, y = WIN_HEIGHT * .5, speed = 2)
   {
     super(scene, x, y, speed);
+    this.name = "Nice Zombie";
 
     const introduction = "Hello I'm a friendly Zombie, and that other one is a not so friendly Zombie."
 
@@ -33,9 +34,10 @@ export class NiceZombie extends Zombie
         const mainCamera = scene.cameras.main;
         const fixedHeight = 100;
         const fixedWidth = 500;
-        this.dialogue = new SimpleTextBox(scene as MainScene, introduction, { x: mainCamera.centerX * .5 - fixedWidth, y: mainCamera.centerY - fixedHeight, wrapWidth: 500, fixedWidth, fixedHeight });
+        this.dialogue = new SimpleTextBox(scene as MainScene, introduction, { x: mainCamera.centerX - fixedWidth, y: mainCamera.centerY, wrapWidth: 500, fixedWidth, fixedHeight });
         this.dialogue.onConversationEnd = () =>
         {
+          //TODO: appear simple dialogue on canvas screen
           const optionSelection = new SimpleDialogue(scene as MainScene);
           optionSelection.textBox = this.dialogue;
         }

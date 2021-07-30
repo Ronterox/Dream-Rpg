@@ -106,14 +106,16 @@ export class SimpleTextBox extends TextBox
           repeat: 0, // -1: infinity
           yoyo: false
         });
-      }).setDepth(1000).start(content, 25).layout();
+      }).setDepth(1000).start(content, 25).layout()
+      //TODO: move to another scene for static ui
+      .setScrollFactor(0);
     //.on('type', function () {
     //})
 
     scene.add.existing(this);
   }
 
-  displayAndUpdate(condition: boolean)
+  public displayAndUpdate(condition: boolean = true)
   {
     this.setVisible(condition);
     this.setActive(condition);

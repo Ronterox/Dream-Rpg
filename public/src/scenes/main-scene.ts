@@ -106,7 +106,7 @@ export class MainScene extends Scene
       orientation: 'y',
       buttons: [createButton(this, 'Spell')],
       space: { item: 8 }
-    }).layout();
+    }).layout().setScrollFactor(0);
 
     buttons.on('button.click', (button: Label, index: number) =>
     {

@@ -67,8 +67,6 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
       //TODO: Create disable method for all gameobjects
       this.destroy();
     }
-
-    console.log("DAMAGE")
   }
 
   public setCollider()

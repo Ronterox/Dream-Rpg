@@ -34,7 +34,7 @@ export class NiceZombie extends Zombie
         const mainCamera = scene.cameras.main;
         const fixedHeight = 100;
         const fixedWidth = 500;
-        this.dialogue = new SimpleTextBox(scene as MainScene, introduction, { x: mainCamera.centerX * .5 - fixedWidth, y: mainCamera.centerY - fixedHeight, wrapWidth: 500, fixedWidth, fixedHeight });
+        this.dialogue = new SimpleTextBox(scene as MainScene, introduction, { x: mainCamera.centerX - fixedWidth, y: mainCamera.centerY, wrapWidth: 500, fixedWidth, fixedHeight });
         this.dialogue.onConversationEnd = () =>
         {
           //TODO: appear simple dialogue on canvas screen

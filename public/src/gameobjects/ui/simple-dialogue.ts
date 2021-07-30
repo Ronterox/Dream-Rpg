@@ -106,6 +106,8 @@ export class SimpleDialogue extends Dialog
     this.setDesign();
     this.setInteractions();
     this.addAnimations();
+    //TODO: move to another scene for static ui
+    this.setScrollFactor(0);
   }
 
   private setDesign()

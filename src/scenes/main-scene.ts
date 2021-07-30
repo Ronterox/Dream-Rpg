@@ -1,6 +1,6 @@
 import { GameObjects } from "phaser";
-import tilemap from "../../assets/sprites/isometric-grass-and-water.json";
-import images from "../../assets/sprites/*.png";
+import tilemap from "../public/assets/sprites/isometric-grass-and-water.json";
+import images from "../public/assets/sprites/*.png";
 // noinspection ES6PreferShortImport
 import { Skeleton } from "../gameobjects/skeleton";
 // noinspection ES6PreferShortImport

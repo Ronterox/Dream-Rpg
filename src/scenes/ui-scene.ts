@@ -3,7 +3,7 @@ import { GameObjects, Scene } from "phaser";
 import UIPlugins from "phaser3-rex-plugins/templates/ui/ui-plugin";
 import Label = UIPlugins.Label;
 import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
-import { Skeleton } from "~/gameobjects/skeleton";
+import { Skeleton } from "src/gameobjects/skeleton";
 
 const UI_SCENE_KEY = 'ui';
 

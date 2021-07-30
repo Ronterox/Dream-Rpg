@@ -538,7 +538,7 @@ Though the dimensions of the icon can vary between iOS devices and versions one
 
 ```html
 
-<link rel="apple-touch-icon" href="public/icon192.png">
+<link rel="apple-touch-icon" href="src/public/icon192.png">
 ```
 
 For a more comprehensive overview, please refer to Mathias' [article on Touch
@@ -556,7 +556,7 @@ for an iPhone:
 ```html
 
 <link rel="apple-touch-startup-image" media="(max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2)"
-      href="public/assets/img/startup.png">
+      href="src/public/assets/img/startup.png">
 ```
 
 

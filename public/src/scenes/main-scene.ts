@@ -108,6 +108,8 @@ export class MainScene extends Scene
       space: { item: 8 }
     }).layout().setScrollFactor(0);
 
+    buttons.setDepth(1000);
+
     buttons.on('button.click', (button: Label, index: number) =>
     {
       buttons.setButtonEnable(index, false);

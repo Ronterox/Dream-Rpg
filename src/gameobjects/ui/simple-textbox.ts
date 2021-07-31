@@ -1,8 +1,8 @@
 import { GameObjects } from "phaser";
 import { TextBox } from "phaser3-rex-plugins/templates/ui/ui-components";
-// noinspection ES6PreferShortImport
-import { MainScene } from "../../scenes/main-scene";
 import GameObject = GameObjects.GameObject;
+// noinspection ES6PreferShortImport
+import { PluginScene } from "../../scenes/plugin-scene";
 
 const COLOR_PRIMARY = 0x4e342e;
 const COLOR_LIGHT = 0x7b5e57;
@@ -17,7 +17,7 @@ interface ISimpleTextBoxConfig
   fixedHeight?: number
 }
 
-function getBBcodeText(scene: MainScene, wrapWidth: number, fixedWidth: number, fixedHeight: number): GameObject
+function getBBcodeText(scene: PluginScene, wrapWidth: number, fixedWidth: number, fixedHeight: number): GameObject
 {
   return scene.rexUI.add.BBCodeText(0, 0, '', {
     fixedWidth: fixedWidth,
@@ -32,7 +32,7 @@ function getBBcodeText(scene: MainScene, wrapWidth: number, fixedWidth: number, 
   })
 }
 
-function getDefaultTextBoxConfig(scene: MainScene, config: ISimpleTextBoxConfig): TextBox.IConfig
+function getDefaultTextBoxConfig(scene: PluginScene, config: ISimpleTextBoxConfig): TextBox.IConfig
 {
   const GetValue = Phaser.Utils.Objects.GetValue;
 
@@ -72,7 +72,7 @@ export class SimpleTextBox extends TextBox
 {
   public onConversationEnd: () => void;
 
-  constructor(scene: MainScene, content = "No text", config: ISimpleTextBoxConfig = { x: 150, y: 150, wrapWidth: 500, fixedWidth: 500, fixedHeight: 100 })
+  constructor(scene: PluginScene, content = "No text", config: ISimpleTextBoxConfig = { x: 150, y: 150, wrapWidth: 500, fixedWidth: 500, fixedHeight: 100 })
   {
     super(scene, getDefaultTextBoxConfig(scene, config));
 

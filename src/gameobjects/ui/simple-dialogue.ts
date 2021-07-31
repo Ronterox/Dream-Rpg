@@ -1,10 +1,10 @@
 import { Dialog } from "phaser3-rex-plugins/templates/ui/ui-components.js";
 import { Scene } from "phaser";
-// noinspection ES6PreferShortImport
-import { MainScene } from "../../scenes/main-scene";
 import { SimpleTextBox } from "./simple-textbox";
+// noinspection ES6PreferShortImport
+import { PluginScene } from "../../scenes/plugin-scene";
 
-const createLabel = function (scene: MainScene, text: string = "No Text")
+const createLabel = function (scene: PluginScene, text: string = "No Text")
 {
   return scene.rexUI.add.label({
     width: 40, // Minimum width of round-rectangle
@@ -35,7 +35,7 @@ const answer2 = 'Well I\'m feeling really good even though I\'m half dead';
 const option3 = 'Cool I guess...';
 const answer3 = 'Yeah, pretty cool...';
 
-function getDefaultConfig(scene: MainScene): Dialog.IConfig
+function getDefaultConfig(scene: PluginScene): Dialog.IConfig
 {
   //TODO: make a function for this repeated code
   const mainCamera = scene.cameras.main;
@@ -107,7 +107,7 @@ export class SimpleDialogue extends Dialog
   //TODO: Change this insane connection between simple dialogue and textbox;
   public textBox: SimpleTextBox;
 
-  constructor(scene: MainScene, config: Dialog.IConfig = getDefaultConfig(scene))
+  constructor(scene: PluginScene, config: Dialog.IConfig = getDefaultConfig(scene))
   {
     super(scene, config);
     this.setDesign();

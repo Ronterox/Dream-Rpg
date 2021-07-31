@@ -3,15 +3,20 @@ import { GameObjects, Scene } from "phaser";
 import UIPlugins from "phaser3-rex-plugins/templates/ui/ui-plugin";
 import Label = UIPlugins.Label;
 import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
-import { Skeleton } from "src/gameobjects/skeleton";
+// noinspection ES6PreferShortImport
+import { Skeleton } from "../gameobjects/skeleton";
 
 const UI_SCENE_KEY = 'ui';
+
+enum ButtonIndex { Spell, Chat }
 
 class UIScene extends PluginScene
 {
   private fpsText: GameObjects.Text;
   private _player: Skeleton;
   private otherScene: Scene;
+
+  private isChatOpen: boolean = false;
 
   constructor()
   {
@@ -37,10 +42,10 @@ class UIScene extends PluginScene
     const COLOR_LIGHT = 0x7b5e57;
     const COLOR_DARK = 0x260e04;
 
-    const createButton = (scene: PluginScene, text: string): Label => scene.rexUI.add.label({
+    const createButton = (scene: PluginScene, text: string, color: number = COLOR_LIGHT): Label => scene.rexUI.add.label({
       width: 100,
       height: 40,
-      background: scene.rexUI.add.roundRectangle(0, 0, 0, 0, 20, COLOR_LIGHT),
+      background: scene.rexUI.add.roundRectangle(0, 0, 0, 0, 20, color),
       text: scene.add.text(0, 0, text, { fontSize: "18px" } as TextStyle),
       space: { left: 10, right: 10, }
     });
@@ -48,28 +53,36 @@ class UIScene extends PluginScene
     const buttons = this.rexUI.add.buttons({
       x: 100, y: 300,
       orientation: 'y',
-      buttons: [createButton(this, 'Spell')],
+      buttons: [createButton(this, 'Spell'), createButton(this, 'Chat', COLOR_PRIMARY)],
       space: { item: 8 }
     }).layout();
 
     buttons.on('button.click', (button: Label, index: number) =>
     {
-      buttons.setButtonEnable(index, false);
-      button.setAlpha(0.5);
-      this._player.activateFire();
-
-      setTimeout(() =>
+      switch (index)
       {
-        buttons.setButtonEnable(index, true);
-        this._player.activateFire(false);
-        button.clearAlpha();
-      }, 1000);
+        case ButtonIndex.Spell:
+          buttons.setButtonEnable(index, false);
+          button.setAlpha(0.5);
+          this._player.activateFire();
+
+          setTimeout(() =>
+          {
+            buttons.setButtonEnable(index, true);
+            this._player.activateFire(false);
+            button.clearAlpha();
+          }, 1000);
+          break;
+        case ButtonIndex.Chat:
+          this.isChatOpen = !this.isChatOpen;
+          break;
+      }
     });
   }
 
   public update()
   {
-    this.fpsText.setText(`${this.game.loop.actualFps.toFixed(2)} fps, ${this.children.list.length + this.otherScene.children.list.length} objects`);
+    this.fpsText.setText(`${this.game.loop.actualFps.toFixed(2)} fps, ${this.children.list.length} UI objects, ${this.otherScene.children.list.length} Gameplay objects`);
   }
 }
 

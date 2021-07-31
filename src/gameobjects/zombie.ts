@@ -59,13 +59,17 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
     //TODO: tween an animation
     this.damageText.setPosition(this.x, this.y);
     this.damageText.setText(`-${damage}`);
-    this.damageText.setDepth(this.y * 2 );
+    this.damageText.setDepth(this.y * 2);
 
+    const camera = this.scene.cameras.main;
     if (this._health <= 0)
     {
       //TODO: Create disable method for all gameobjects
+      camera.flash(100);
       this.destroy();
     }
+
+    camera.shake(100);
   }
 
   public setCollider()

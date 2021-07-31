@@ -10,6 +10,7 @@ const config = {
   width: WIN_WIDTH,
   height: WIN_HEIGHT,
   backgroundColor: '#000',
+  pixelArt: true,
   physics: {
     default: 'arcade',
     arcade: { gravity: { y: 0 }, debug: false }

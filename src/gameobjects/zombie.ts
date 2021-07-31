@@ -1,9 +1,6 @@
-// noinspection ES6PreferShortImport
 import { SPRITE_KEYS, WIN_HEIGHT, WIN_WIDTH } from "../game-config";
-import { GameObjects, Skeleton} from "./gameobjects-components";
-// noinspection ES6PreferShortImport
-import { Scene } from "../scenes/scenes-components";
-// noinspection ES6PreferShortImport
+import { GameObjects, Skeleton } from "./gameobjects-components";
+import { Scene } from "phaser";
 import { IPosition, TextStyle } from "../scripts/scripts-components";
 
 //TODO: Generalize methods and interfaces from Skeleton class

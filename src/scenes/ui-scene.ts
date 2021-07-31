@@ -2,7 +2,6 @@ import RexUIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin";
 import Label = RexUIPlugin.Label;
 import { PluginScene, UI_SCENE_KEY, Scene } from "./scenes-components";
 import { Skeleton, GameObjects } from "../gameobjects/gameobjects-components";
-// noinspection ES6PreferShortImport
 import { TextStyle } from "../scripts/scripts-components";
 
 enum ButtonIndex { Spell, Chat }

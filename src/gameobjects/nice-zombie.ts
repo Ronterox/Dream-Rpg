@@ -1,7 +1,5 @@
-// noinspection ES6PreferShortImport
 import { WIN_HEIGHT, WIN_WIDTH } from "../game-config";
-// noinspection ES6PreferShortImport
-import { Zombie } from "./gameobjects-components";
+import { Zombie } from "./zombie";
 import { SimpleDialogue, SimpleTextBox } from "./ui/ui-gameobjects-components";
 import { PluginScene, Scene, UI_SCENE_KEY } from "../scenes/scenes-components";
 

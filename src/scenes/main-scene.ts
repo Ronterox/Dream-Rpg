@@ -1,10 +1,8 @@
 import tilemap from "../public/assets/sprites/isometric-grass-and-water.json";
 import images from "../public/assets/sprites/*.png";
-// noinspection ES6PreferShortImport
 import { MAP_KEY, SPRITE_KEYS } from "../game-config";
 import { GameObjects, Zombie, NiceZombie, Skeleton } from "../gameobjects/gameobjects-components";
 import { PluginScene, UI_SCENE_KEY } from "./scenes-components";
-// noinspection ES6PreferShortImport
 import { CursorKeys } from "../scripts/scripts-components";
 
 export class MainScene extends PluginScene

@@ -1,9 +1,6 @@
-// noinspection ES6PreferShortImport
 import { SPRITE_KEYS, WIN_HEIGHT, WIN_WIDTH } from "../game-config";
 import { GameObjects, Physics } from "./gameobjects-components";
-// noinspection ES6PreferShortImport
-import { Scene } from "../scenes/scenes-components";
-// noinspection ES6PreferShortImport
+import { Scene } from "phaser";
 import { IPosition } from "../scripts/scripts-components";
 
 type AnimationFrame =

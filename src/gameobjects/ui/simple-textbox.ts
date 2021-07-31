@@ -1,5 +1,4 @@
-// noinspection ES6PreferShortImport
-import { PluginScene } from "../../scenes/scenes-components";
+import { PluginScene } from "../../scenes/plugin-scene";
 import { GameObject, GameObjects } from "../gameobjects-components";
 import { TextBox } from "./ui-gameobjects-components";
 

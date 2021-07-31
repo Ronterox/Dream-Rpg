@@ -1,9 +1,8 @@
 import { AUTO, Game } from 'phaser';
-import { MainScene } from './scenes/main-scene';
 import { WIN_HEIGHT, WIN_WIDTH } from "./game-config";
-import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
+import { MainScene, UIScene } from "./scenes/scenes-components";
+import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin';
 import RESIZE = Phaser.Scale.RESIZE;
-import { UIScene } from "./scenes/ui-scene";
 
 const config = {
   type: AUTO,
@@ -18,7 +17,7 @@ const config = {
   plugins: {
     scene: [{
       key: 'rexUI',
-      plugin: UIPlugin,
+      plugin: RexUIPlugin,
       mapping: 'rexUI'
     }]
   },

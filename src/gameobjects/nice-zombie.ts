@@ -1,16 +1,9 @@
 // noinspection ES6PreferShortImport
 import { WIN_HEIGHT, WIN_WIDTH } from "../game-config";
-import { Scene } from "phaser";
 // noinspection ES6PreferShortImport
-import { SimpleTextBox } from "./ui/simple-textbox";
-// noinspection ES6PreferShortImport
-import { Zombie } from "./zombie";
-// noinspection ES6PreferShortImport
-import { SimpleDialogue } from "./ui/simple-dialogue";
-// noinspection ES6PreferShortImport
-import { UI_SCENE_KEY } from "../scenes/ui-scene";
-// noinspection ES6PreferShortImport
-import { PluginScene } from "../scenes/plugin-scene";
+import { Zombie } from "./gameobjects-components";
+import { SimpleDialogue, SimpleTextBox } from "./ui/ui-gameobjects-components";
+import { PluginScene, Scene, UI_SCENE_KEY } from "../scenes/scenes-components";
 
 //TODO: Generalize methods and interfaces from Skeleton class
 //TODO: let zombie walk around
@@ -40,12 +33,12 @@ export class NiceZombie extends Zombie
         const fixedHeight = mainResizer * .3, fixedWidth = mainResizer * .5;
         const wrapWidth = fixedWidth;
 
-        const x = mainCamera.centerX - fixedWidth, y = mainCamera.centerY - fixedHeight;
+        const uiX = mainCamera.centerX - fixedWidth, uiY = mainCamera.centerY - fixedHeight;
 
         const uiScene = scene.game.scene.getScene(UI_SCENE_KEY) as PluginScene;
 
         //TODO: spawn all UIs on ui scene
-        this.dialogue = new SimpleTextBox(uiScene, introduction, { x, y, wrapWidth, fixedWidth, fixedHeight });
+        this.dialogue = new SimpleTextBox(uiScene, introduction, { x: uiX, y: uiY, wrapWidth, fixedWidth, fixedHeight });
         this.dialogue.onConversationEnd = () =>
         {
           //TODO: appear simple dialogue on canvas screen

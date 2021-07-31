@@ -1,8 +1,7 @@
-import { GameObjects } from "phaser";
-import { TextBox } from "phaser3-rex-plugins/templates/ui/ui-components";
-import GameObject = GameObjects.GameObject;
 // noinspection ES6PreferShortImport
-import { PluginScene } from "../../scenes/plugin-scene";
+import { PluginScene } from "../../scenes/scenes-components";
+import { GameObject, GameObjects } from "../gameobjects-components";
+import { TextBox } from "./ui-gameobjects-components";
 
 const COLOR_PRIMARY = 0x4e342e;
 const COLOR_LIGHT = 0x7b5e57;

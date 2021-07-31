@@ -1,9 +1,10 @@
-import { Scene } from "phaser";
-// @ts-ignore
+// noinspection ES6PreferShortImport
+import { Scene } from "../scenes/scenes-components";
+// noinspection ES6PreferShortImport
+import { ArcadePhysics, GameObject } from "../gameobjects/gameobjects-components";
+// noinspection ES6PreferShortImport
+import { TextStyle } from "../scripts/scripts-components";
 import images from '../../assets/sprites/*.png';
-import PhysicsType = Phaser.Physics.Arcade;
-import GameObject = Phaser.GameObjects.GameObject;
-import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
 
 const IMG_SKY = 'sky';
 const IMG_GROUND = 'ground';
@@ -11,9 +12,9 @@ const IMG_STAR = 'star';
 const IMG_BOMB = 'bomb';
 const SPRITE_DUDE = 'dude';
 
-export default class GameScene extends Scene
+export class GameScene extends Scene
 {
-  private player?: PhysicsType.Sprite;
+  private player?: ArcadePhysics.Sprite;
   private bombs;
 
   private score = 0;
@@ -90,11 +91,11 @@ export default class GameScene extends Scene
       setXY: { x: 12, y: 0, stepX: 70 }
     });
 
-    stars.children.iterate((child) => (child as unknown as PhysicsType.Body).setBounceY(Phaser.Math.FloatBetween(0.4, 0.8)));
+    stars.children.iterate((child) => (child as unknown as ArcadePhysics.Body).setBounceY(Phaser.Math.FloatBetween(0.4, 0.8)));
 
     scene.physics.add.overlap((this.player as GameObject), stars, (player, star) =>
     {
-      (star as PhysicsType.Image).disableBody(true, true);
+      (star as ArcadePhysics.Image).disableBody(true, true);
 
       this.score += 10;
       this.scoreText.setText(`Score: ${this.score}`);
@@ -103,11 +104,11 @@ export default class GameScene extends Scene
       {
         stars.children.iterate((child) =>
         {
-          const c = child as PhysicsType.Image;
+          const c = child as ArcadePhysics.Image;
           c.enableBody(true, c.x, 0, true, true)
         });
 
-        const x = (player as PhysicsType.Sprite).x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+        const x = (player as ArcadePhysics.Sprite).x < 400 ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
         const bomb = this.bombs.create(x, 16, 'bomb');
         bomb.setBounce(1);
@@ -145,7 +146,7 @@ export default class GameScene extends Scene
     {
       this.physics.pause();
 
-      const player = p as PhysicsType.Sprite;
+      const player = p as ArcadePhysics.Sprite;
 
       player.setTint(0xff0000);
 

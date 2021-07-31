@@ -1,9 +1,10 @@
 // noinspection ES6PreferShortImport
 import { SPRITE_KEYS, WIN_HEIGHT, WIN_WIDTH } from "../game-config";
-import { GameObjects, Scene } from "phaser";
+import { GameObjects, Skeleton} from "./gameobjects-components";
 // noinspection ES6PreferShortImport
-import { IPosition, Skeleton } from "./skeleton";
-import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
+import { Scene } from "../scenes/scenes-components";
+// noinspection ES6PreferShortImport
+import { IPosition, TextStyle } from "../scripts/scripts-components";
 
 //TODO: Generalize methods and interfaces from Skeleton class
 //TODO: let zombie walk around

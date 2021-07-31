@@ -1,17 +1,11 @@
-import { GameObjects } from "phaser";
 import tilemap from "../public/assets/sprites/isometric-grass-and-water.json";
 import images from "../public/assets/sprites/*.png";
 // noinspection ES6PreferShortImport
-import { Skeleton } from "../gameobjects/skeleton";
-// noinspection ES6PreferShortImport
 import { MAP_KEY, SPRITE_KEYS } from "../game-config";
+import { GameObjects, Zombie, NiceZombie, Skeleton } from "../gameobjects/gameobjects-components";
+import { PluginScene, UI_SCENE_KEY } from "./scenes-components";
 // noinspection ES6PreferShortImport
-import { Zombie } from "../gameobjects/zombie";
-// noinspection ES6PreferShortImport
-import { NiceZombie } from "../gameobjects/nice-zombie";
-import CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
-import { PluginScene } from "./plugin-scene";
-import { UI_SCENE_KEY } from "./ui-scene";
+import { CursorKeys } from "../scripts/scripts-components";
 
 export class MainScene extends PluginScene
 {
@@ -20,6 +14,7 @@ export class MainScene extends PluginScene
   private _cameraRotation = 0;
   private _cameraZoom = 0;
 
+  // noinspection JSUnusedGlobalSymbols
   public preload()
   {
     this.load.json(MAP_KEY, tilemap);

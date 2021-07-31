@@ -1,8 +1,5 @@
-import { Dialog } from "phaser3-rex-plugins/templates/ui/ui-components.js";
-import { Scene } from "phaser";
-import { SimpleTextBox } from "./simple-textbox";
-// noinspection ES6PreferShortImport
-import { PluginScene } from "../../scenes/plugin-scene";
+import { Dialog, SimpleTextBox } from "./ui-gameobjects-components";
+import { PluginScene, Scene } from "../../scenes/scenes-components";
 
 const createLabel = function (scene: PluginScene, text: string = "No Text")
 {

@@ -1,16 +1,13 @@
-import { PluginScene } from "./plugin-scene";
-import { GameObjects, Scene } from "phaser";
-import UIPlugins from "phaser3-rex-plugins/templates/ui/ui-plugin";
-import Label = UIPlugins.Label;
-import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
+import RexUIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin";
+import Label = RexUIPlugin.Label;
+import { PluginScene, UI_SCENE_KEY, Scene } from "./scenes-components";
+import { Skeleton, GameObjects } from "../gameobjects/gameobjects-components";
 // noinspection ES6PreferShortImport
-import { Skeleton } from "../gameobjects/skeleton";
-
-const UI_SCENE_KEY = 'ui';
+import { TextStyle } from "../scripts/scripts-components";
 
 enum ButtonIndex { Spell, Chat }
 
-class UIScene extends PluginScene
+export class UIScene extends PluginScene
 {
   private fpsText: GameObjects.Text;
   private _player: Skeleton;
@@ -84,10 +81,4 @@ class UIScene extends PluginScene
   {
     this.fpsText.setText(`${this.game.loop.actualFps.toFixed(2)} fps, ${this.children.list.length} UI objects, ${this.otherScene.children.list.length} Gameplay objects`);
   }
-}
-
-export
-{
-  UIScene,
-  UI_SCENE_KEY
 }

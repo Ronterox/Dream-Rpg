@@ -1,13 +1,10 @@
 // noinspection ES6PreferShortImport
 import { SPRITE_KEYS, WIN_HEIGHT, WIN_WIDTH } from "../game-config";
-import { GameObjects, Physics, Scene } from "phaser";
-//TODO: vector class
-//But is okay to use something simple like interface here
-export interface IPosition
-{
-  x: number,
-  y: number
-}
+import { GameObjects, Physics } from "./gameobjects-components";
+// noinspection ES6PreferShortImport
+import { Scene } from "../scenes/scenes-components";
+// noinspection ES6PreferShortImport
+import { IPosition } from "../scripts/scripts-components";
 
 type AnimationFrame =
   {

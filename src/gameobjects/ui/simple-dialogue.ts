@@ -36,17 +36,16 @@ function getDefaultConfig(scene: PluginScene): Dialog.IConfig
 {
   //TODO: make a function for this repeated code
   const mainCamera = scene.cameras.main;
-  const mainResizer = mainCamera.centerX > mainCamera.centerY ? mainCamera.centerX : mainCamera.centerY;
+  const mainResizer = screen.orientation.type === "landscape-primary" ? mainCamera.width : mainCamera.height;
 
   const fixedHeight = mainResizer * .3, fixedWidth = mainResizer * .5;
-  const x = mainCamera.centerX - fixedWidth, y = mainCamera.centerY - fixedHeight;
 
   return {
     x: 400,
     y: 300,
     width: 500,
 
-    background: scene.rexUI.add.roundRectangle(x, y, fixedWidth, fixedHeight, 20, 0x1565c0),
+    background: scene.rexUI.add.roundRectangle(mainCamera.centerX, mainCamera.centerY, fixedWidth, fixedHeight, 20, 0x1565c0),
 
     // title: createLabel(scene, 'Speaking to Mr. NiceZombie'),
 
@@ -110,15 +109,11 @@ export class SimpleDialogue extends Dialog
     this.setDesign();
     this.setInteractions();
     this.addAnimations();
-    //TODO: move to another scene for static ui
-    this.setScrollFactor(0);
   }
 
   private setDesign()
   {
-    this.setDraggable('background')   // Draggable-background
-      .layout()
-      .popUp(1000).setDepth(1000);
+    this.setDraggable('background').layout().popUp(1000);
   }
 
   private setInteractions()

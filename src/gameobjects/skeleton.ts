@@ -1,4 +1,4 @@
-import { SPRITE_KEYS, WIN_HEIGHT, WIN_WIDTH } from "../game-config";
+import { SPRITE_KEYS } from "../game-config";
 import { GameObjects, Physics } from "./gameobjects-components";
 import { Scene } from "phaser";
 import { IPosition } from "../scripts/scripts-components";
@@ -86,23 +86,20 @@ export class Skeleton extends Physics.Arcade.Sprite
   private _animationDirection: string = 'Up';
   private _targetTile?: GameObjects.Image;
 
-  constructor(scene: Scene, x = WIN_WIDTH * .5, y = WIN_HEIGHT * .5, speed = 2)
+  constructor(scene: Scene, x = scene.cameras.main.centerX, y = scene.cameras.main.centerY, speed = 2)
   {
     super(scene, x, y, SPRITE_KEYS.skeleton);
     this.name = "Player";
+
     this.speed = speed;
-    this.setDepth(y + 64);
     this.targetPosition = { x, y };
-    this.width *= .5;
+    this.setDepth(y + 64).setAnimations();
 
     scene.physics.add.existing(scene.add.existing(this));
-    this.body.setSize(this.width * .5, this.width).setOffset(this.width * .5 + 15, this.width * .5);
-
-    this.setAnimations();
+    this.body.setSize(this.width * .5, this.height * .5);
 
     this._fire = scene.physics.add.sprite(this.x, this.y, SPRITE_KEYS.fire);
-    this._fire.setScale(.25, .25);
-    this._fire.name = "Fire Spell";
+    this._fire.setScale(.25, .25).name = "Fire Spell";
 
     this.activateFire(false);
   }
@@ -123,21 +120,22 @@ export class Skeleton extends Physics.Arcade.Sprite
       });
     }
 
-    this.play('idleUp');
+    this.play('idleUp', true);
   }
 
   public activateFire(activate: boolean = true)
   {
-    this._fire.setActive(activate);
-    this._fire.setVisible(activate);
+    const fire = this._fire;
+    // @ts-ignore
+    fire.setActive(activate).setVisible(activate).body.setEnable(activate);
 
     if (activate)
     {
       const x = this.x, y = this.y;
-      this._fire.setPosition(x, y);
+      fire.setPosition(x, y);
 
       const closestEnemy = this.scene.physics.closest(this) as Physics.Arcade.Body;
-      if (closestEnemy) this._fire.setVelocity(closestEnemy.x - x, closestEnemy.y - y).setDepth(this._fire.y * 2);
+      if (closestEnemy) fire.setVelocity(closestEnemy.x - x, closestEnemy.y - y).setDepth(y * 2);
     }
   }
 
@@ -149,10 +147,7 @@ export class Skeleton extends Physics.Arcade.Sprite
       this._targetTile = undefined;
 
       //Can also use stop() if changing acceleration and other things
-      this.setVelocity(0, 0);
-      this.isMoving = false;
-
-      this.play('idle' + this._animationDirection);
+      this.setVelocity(0, 0).play('idle' + this._animationDirection, true).isMoving = false;
     }
   }
 
@@ -195,9 +190,7 @@ export class Skeleton extends Physics.Arcade.Sprite
       //West
     }
 
-    this.play('walk' + this._animationDirection, true);
-
-    this.setVelocity(velocity.x, velocity.y);
+    this.setVelocity(velocity.x, velocity.y).play('walk' + this._animationDirection, true);
   }
 
   public update()

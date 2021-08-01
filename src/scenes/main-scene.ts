@@ -30,9 +30,6 @@ export class MainScene extends PluginScene
   public create()
   {
     this.buildMap();
-
-    const mainCamera = this.cameras.main;
-
     const houses = this.placeHouses();
 
     const zombies = this.physics.add.group();
@@ -40,19 +37,20 @@ export class MainScene extends PluginScene
     const niceZombie = new NiceZombie(this, 900, 200);
     const simpleZombie = new Zombie(this, 1100, 400);
 
-    this.player = new Skeleton(this);
-
     zombies.add(niceZombie);
     zombies.add(simpleZombie);
+
+    this.player = new Skeleton(this);
 
     zombies.children.iterate(z =>
     {
       const zombie = z as Zombie;
-      zombie.player = this.player;
+      zombie.setPointerEvent(this.player);
       zombie.setCollider();
     });
 
     const stopPlayerMovement = () => this.player.clearTargetTile();
+
     this.physics.add.collider(houses, this.player, stopPlayerMovement);
     this.physics.add.collider(zombies, this.player, stopPlayerMovement);
     //TODO: this overlap addition should be created more dynamically
@@ -63,11 +61,8 @@ export class MainScene extends PluginScene
       (zombie as Zombie).takeDamage({ x: fireImage.x, y: fireImage.y }, Phaser.Math.Between(10, 20));
     });
 
-    const keyboard = this.input.keyboard;
-
-    this.cameraControls = keyboard.createCursorKeys();
-
-    mainCamera.startFollow(this.player);
+    this.cameraControls = this.input.keyboard.createCursorKeys();
+    this.cameras.main.startFollow(this.player);
 
     this.scene.launch(UI_SCENE_KEY, { player: this.player, scene: this });
   }
@@ -107,13 +102,11 @@ export class MainScene extends PluginScene
   {
     //  Parse the data out of the map
     const data = this.cache.json.get(MAP_KEY);
-    const tileWidth = data.tilewidth, tileHeight = data.tileheight;
 
-    const tileWidthHalf = tileWidth * .5;
-    const tileHeightHalf = tileHeight * .5;
+    const tileWidthHalf = data.tilewidth * .5;
+    const tileHeightHalf = data.tileheight * .5;
 
     const firstLayer = data.layers[0];
-
     const layer = firstLayer.data;
 
     const mapWidth = firstLayer.width, mapHeight = firstLayer.height;
@@ -135,12 +128,7 @@ export class MainScene extends PluginScene
         const ty = (x + y) * tileHeightHalf;
 
         const tile: GameObjects.Image = tilesGroup.create(centerX + tx, centerY + ty, SPRITE_KEYS.tiles, id);
-        //TODO: check to a way of adding to the whole group the event
-        tile.setInteractive();
-        //TODO: check how to get the click event of the object itself
-        tile.on('pointerdown', () => this.player.setTarget(tile));
-
-        tile.setDepth(centerY + ty);
+        tile.setDepth(centerY + ty).setInteractive().on('pointerdown', () => this.player.setTarget(tile));
 
         i++;
       }
@@ -152,19 +140,14 @@ export class MainScene extends PluginScene
     //TODO: find how to create houses with simple iteration
     const houses = this.physics.add.staticGroup();
 
-    const house_1: GameObjects.Image = houses.create(240, 370, SPRITE_KEYS.house);
-    const house_2: GameObjects.Image = houses.create(1300, 290, SPRITE_KEYS.house);
-
-    houses.add(house_1);
-    houses.add(house_2);
+    houses.add(houses.create(240, 370, SPRITE_KEYS.house));
+    houses.add(houses.create(1300, 290, SPRITE_KEYS.house));
 
     houses.children.iterate(h =>
     {
       const house = h as GameObjects.Image;
       house.setDepth(house.y + 86);
-
-      const size = { width: house_1.width * .5, height: house_1.height * .5 };
-      (house.body as Phaser.Physics.Arcade.Body).setSize(size.width, size.height);
+      (house.body as Phaser.Physics.Arcade.Body).setSize(house.width * .5, house.height * .5);
     });
 
     return houses;

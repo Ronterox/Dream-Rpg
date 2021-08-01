@@ -1,7 +1,8 @@
-import { WIN_HEIGHT, WIN_WIDTH } from "../game-config";
 import { Zombie } from "./zombie";
 import { SimpleDialogue, SimpleTextBox } from "./ui/ui-gameobjects-components";
 import { PluginScene, Scene, UI_SCENE_KEY } from "../scenes/scenes-components";
+
+const introduction = "Hello I'm a friendly Zombie, and that other one is a not so friendly Zombie."
 
 //TODO: Generalize methods and interfaces from Skeleton class
 //TODO: let zombie walk around
@@ -9,17 +10,14 @@ export class NiceZombie extends Zombie
 {
   private dialogue: SimpleTextBox;
 
-  constructor(scene: Scene, x = WIN_WIDTH * .5, y = WIN_HEIGHT * .5, speed = 2)
+  constructor(scene: Scene, x = scene.cameras.main.centerX, y = scene.cameras.main.centerY)
   {
-    super(scene, x, y, speed);
-    this.name = "Nice Zombie";
-
-    const introduction = "Hello I'm a friendly Zombie, and that other one is a not so friendly Zombie."
+    super(scene, x, y);
 
     //TODO: again check for other way of doing this
     //TODO: fix zombie hitbox
     //If you want look for another better way of pointer down event
-    this.on('pointerdown', () =>
+    this.clearTint().on('pointerdown', () =>
     {
       if (this.dialogue) this.dialogue.displayAndUpdate(true);
       else
@@ -29,14 +27,11 @@ export class NiceZombie extends Zombie
         const mainResizer = screen.orientation.type === "landscape-primary" ? mainCamera.centerX : mainCamera.centerY;
 
         const fixedHeight = mainResizer * .3, fixedWidth = mainResizer * .5;
-        const wrapWidth = fixedWidth;
-
         const uiX = mainCamera.centerX - fixedWidth, uiY = mainCamera.centerY - fixedHeight;
 
         const uiScene = scene.game.scene.getScene(UI_SCENE_KEY) as PluginScene;
 
-        //TODO: spawn all UIs on ui scene
-        this.dialogue = new SimpleTextBox(uiScene, introduction, { x: uiX, y: uiY, wrapWidth, fixedWidth, fixedHeight });
+        this.dialogue = new SimpleTextBox(uiScene, introduction, { x: uiX, y: uiY, wrapWidth: fixedWidth, fixedWidth, fixedHeight });
         this.dialogue.onConversationEnd = () =>
         {
           //TODO: appear simple dialogue on canvas screen
@@ -45,7 +40,5 @@ export class NiceZombie extends Zombie
         }
       }
     });
-
-    this.clearTint();
   }
 }

@@ -6,3 +6,4 @@ dist
 .cache
 .idea
 .idea/sonarlint
+src/scripts/account/.env

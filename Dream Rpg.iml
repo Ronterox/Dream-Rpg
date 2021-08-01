@@ -18,6 +18,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea/sonarlint/issuestore/9" />
       <excludeFolder url="file://$MODULE_DIR$/.idea/sonarlint/issuestore/a" />
       <excludeFolder url="file://$MODULE_DIR$/.idea/sonarlint/issuestore/f" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/sonarlint" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

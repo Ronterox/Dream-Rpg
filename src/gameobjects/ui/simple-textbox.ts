@@ -1,8 +1,6 @@
-import { GameObjects } from "phaser";
-import { TextBox } from "phaser3-rex-plugins/templates/ui/ui-components";
-import GameObject = GameObjects.GameObject;
-// noinspection ES6PreferShortImport
 import { PluginScene } from "../../scenes/plugin-scene";
+import { GameObject, GameObjects } from "../gameobjects-components";
+import { TextBox } from "./ui-gameobjects-components";
 
 const COLOR_PRIMARY = 0x4e342e;
 const COLOR_LIGHT = 0x7b5e57;
@@ -76,16 +74,14 @@ export class SimpleTextBox extends TextBox
   {
     super(scene, getDefaultTextBoxConfig(scene, config));
 
-    this.setOrigin(0)
-      .setInteractive()
-      .on('pointerdown', () =>
-      {
-        const icon = (this.getElement('action') as GameObjects.Image).setVisible(false);
-        this.resetChildVisibleState(icon);
+    this.setOrigin(0).setInteractive().on('pointerdown', () =>
+    {
+      const icon = (this.getElement('action') as GameObjects.Image).setVisible(false);
+      this.resetChildVisibleState(icon);
 
-        if (this.isTyping) this.stop(true);
-        else this.typeNextPage();
-      })
+      if (this.isTyping) this.stop(true);
+      else this.typeNextPage();
+    })
       .on('pageend', () =>
       {
         if (this.isLastPage)
@@ -106,9 +102,7 @@ export class SimpleTextBox extends TextBox
           repeat: 0, // -1: infinity
           yoyo: false
         });
-      }).setDepth(1000).start(content, 25).layout()
-      //TODO: move to another scene for static ui
-      .setScrollFactor(0);
+      }).start(content, 25).layout()
     //.on('type', function () {
     //})
 

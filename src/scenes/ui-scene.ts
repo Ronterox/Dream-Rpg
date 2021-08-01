@@ -1,16 +1,16 @@
-import { PluginScene } from "./plugin-scene";
-import { GameObjects, Scene } from "phaser";
-import UIPlugins from "phaser3-rex-plugins/templates/ui/ui-plugin";
-import Label = UIPlugins.Label;
-import TextStyle = Phaser.Types.GameObjects.Text.TextStyle;
-// noinspection ES6PreferShortImport
-import { Skeleton } from "../gameobjects/skeleton";
+import RexUIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin";
+import Label = RexUIPlugin.Label;
+import { PluginScene, UI_SCENE_KEY, Scene } from "./scenes-components";
+import { Skeleton, GameObjects } from "../gameobjects/gameobjects-components";
+import { TextStyle } from "../scripts/scripts-components";
 
-const UI_SCENE_KEY = 'ui';
+const COLOR_PRIMARY = 0x4e342e;
+const COLOR_LIGHT = 0x7b5e57;
+const COLOR_DARK = 0x260e04;
 
 enum ButtonIndex { Spell, Chat }
 
-class UIScene extends PluginScene
+export class UIScene extends PluginScene
 {
   private fpsText: GameObjects.Text;
   private _player: Skeleton;
@@ -23,6 +23,7 @@ class UIScene extends PluginScene
     super(UI_SCENE_KEY);
   }
 
+  // noinspection JSUnusedGlobalSymbols
   public init(data: { player: Skeleton, scene: Scene })
   {
     this._player = data.player;
@@ -35,25 +36,23 @@ class UIScene extends PluginScene
     this.createButtons();
   }
 
-  //TODO: understand this buttons and all ui to scene ui
-  public createButtons()
+  public createButton(text: string = "", width = 100, height = 40, color: number = COLOR_LIGHT): Label
   {
-    const COLOR_PRIMARY = 0x4e342e;
-    const COLOR_LIGHT = 0x7b5e57;
-    const COLOR_DARK = 0x260e04;
-
-    const createButton = (scene: PluginScene, text: string, color: number = COLOR_LIGHT): Label => scene.rexUI.add.label({
-      width: 100,
-      height: 40,
-      background: scene.rexUI.add.roundRectangle(0, 0, 0, 0, 20, color),
-      text: scene.add.text(0, 0, text, { fontSize: "18px" } as TextStyle),
+    return this.rexUI.add.label({
+      width,
+      height,
+      background: this.rexUI.add.roundRectangle(0, 0, 0, 0, 20, color),
+      text: this.add.text(0, 0, text, { fontSize: "18px" } as TextStyle),
       space: { left: 10, right: 10, }
     });
+  }
 
+  public createButtons()
+  {
     const buttons = this.rexUI.add.buttons({
       x: 100, y: 300,
       orientation: 'y',
-      buttons: [createButton(this, 'Spell'), createButton(this, 'Chat', COLOR_PRIMARY)],
+      buttons: [this.createButton('Spell'), this.createButton('Chat', 100, 40, COLOR_PRIMARY)],
       space: { item: 8 }
     }).layout();
 
@@ -84,10 +83,4 @@ class UIScene extends PluginScene
   {
     this.fpsText.setText(`${this.game.loop.actualFps.toFixed(2)} fps, ${this.children.list.length} UI objects, ${this.otherScene.children.list.length} Gameplay objects`);
   }
-}
-
-export
-{
-  UIScene,
-  UI_SCENE_KEY
 }

@@ -17,7 +17,7 @@
     "baseUrl": "./src",
     "strictPropertyInitialization": false,
     "paths": {
-      "~/*": ["./*"]
+      "~*": ["./src/*"]
     },
     "typeRoots": [
       "node_modules/@types",

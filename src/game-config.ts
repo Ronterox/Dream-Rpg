@@ -1,5 +1,3 @@
-const WIN_HEIGHT = 600, WIN_WIDTH = 800;
-
 const SPRITE_KEYS =
   {
     skeleton: 'skeleton',
@@ -28,7 +26,5 @@ Array.prototype.fastLoop = function <T>(this: T[], action: (value: T) => void)
 
 export
 {
-  WIN_HEIGHT, WIN_WIDTH,
-
   SPRITE_KEYS, MAP_KEY
 }

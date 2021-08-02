@@ -8,13 +8,16 @@ const userSchema = new mongoose.Schema({
   highScore: { type: Number, default: 0 }
 });
 
-userSchema.pre('save', async next =>
+userSchema.pre('save', async function (next)
 {
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-userSchema.methods.isValidPassword = async password => await bcrypt.compare(password, this.password);
+userSchema.methods.isValidPassword = async function (password)
+{
+  return bcrypt.compare(password, this.password);
+}
 
 const UserModel = mongoose.model('user', userSchema);
 

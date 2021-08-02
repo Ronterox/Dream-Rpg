@@ -1,11 +1,10 @@
 const passport = require('passport');
-const localStrategy = require('passport-local').Strategy;
+const UserModel = require('./userModel');
 const JWTstrategy = require('passport-jwt').Strategy;
-
-const UserModel = require('userModel');
+const LocalStrategy = require('passport-local').Strategy;
 
 // handle user registration
-passport.use('signup', new localStrategy({
+passport.use('signup', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
   passReqToCallback: true
@@ -24,7 +23,7 @@ passport.use('signup', new localStrategy({
 }));
 
 // handle user login
-passport.use('login', new localStrategy({
+passport.use('login', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password'
 }, async (email, password, done) =>
@@ -33,9 +32,7 @@ passport.use('login', new localStrategy({
   {
     const user = await UserModel.findOne({ email });
     if (!user) return done(null, false, { message: 'User not found' });
-
-    const validate = await user.isValidPassword(password);
-    return validate? done(null, user, { message: 'Logged in Successfully' }) : done(null, false, { message: 'Wrong Password' });
+    return await user.isValidPassword(password) ? done(null, user, { message: 'Logged in Successfully' }) : done(null, false, { message: 'Wrong Password' });
   }
   catch (error)
   {
@@ -44,13 +41,11 @@ passport.use('login', new localStrategy({
 }));
 
 // verify token is valid
-passport.use(new JWTstrategy({
+passport.use('jwt', new JWTstrategy({
   secretOrKey: 'top_secret',
   jwtFromRequest: function (req)
   {
-    let token = null;
-    if (req && req.cookies) token = req.cookies['jwt'];
-    return token;
+    return req && req.cookies ? req.cookies['jwt'] : null;
   }
 }, async (token, done) =>
 {
@@ -63,3 +58,5 @@ passport.use(new JWTstrategy({
     done(error);
   }
 }));
+
+module.exports = passport;

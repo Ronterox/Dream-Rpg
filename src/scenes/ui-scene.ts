@@ -81,6 +81,6 @@ export class UIScene extends PluginScene
 
   public update()
   {
-    this.fpsText.setText(`${this.game.loop.actualFps.toFixed(2)} fps, ${this.children.list.length} UI objects, ${this.otherScene.children.list.length} Gameplay objects`);
+    this.fpsText.setText(`v0.9, ${this.game.loop.actualFps.toFixed(2)} fps, ${this.children.list.length} UI objects, ${this.otherScene.children.list.length} Gameplay objects`);
   }
 }

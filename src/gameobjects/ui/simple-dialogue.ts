@@ -1,5 +1,6 @@
 import { Dialog, SimpleTextBox } from "./ui-gameobjects-components";
 import { PluginScene, Scene } from "../../scenes/scenes-components";
+import { disable } from "../../scripts/utilities";
 
 const createLabel = function (scene: PluginScene, text: string = "No Text")
 {
@@ -141,22 +142,16 @@ export class SimpleDialogue extends Dialog
           this.textBox.start(Math.round(Math.random()) === 0 ? "Cya" : "Goodbye Friend", 50);
           this.textBox.onConversationEnd = () =>
           {
-            this.textBox.displayAndUpdate(false);
-            this.displayAndUpdate(false);
+            disable(this.textBox, false);
+            disable(this, false);
           }
           return;
       }
-      this.displayAndUpdate(false);
+      disable(this, false);
       print.text += groupName + '-' + index + ': ' + button.text + '\n';
     })
       .on('button.over', (button) => button.getElement('background').setStrokeStyle(1, 0xffffff))
       .on('button.out', (button) => button.getElement('background').setStrokeStyle());
-  }
-
-  public displayAndUpdate(condition: boolean = true)
-  {
-    this.setActive(condition);
-    this.setVisible(condition);
   }
 
   private addAnimations(scene: Scene = this.scene)

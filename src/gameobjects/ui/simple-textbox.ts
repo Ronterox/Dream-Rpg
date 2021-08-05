@@ -1,6 +1,7 @@
 import { PluginScene } from "../../scenes/plugin-scene";
 import { GameObject, GameObjects } from "../gameobjects-components";
 import { TextBox } from "./ui-gameobjects-components";
+import { enable } from "../../scripts/utilities";
 
 const COLOR_PRIMARY = 0x4e342e;
 const COLOR_LIGHT = 0x7b5e57;
@@ -80,6 +81,7 @@ export class SimpleTextBox extends TextBox
       this.resetChildVisibleState(icon);
 
       if (this.isTyping) this.stop(true);
+      else if (this.isLastPage) enable(this, false);
       else this.typeNextPage();
     })
       .on('pageend', () =>

@@ -1,6 +1,6 @@
-import tilemap from "../public/assets/sprites/isometric-grass-and-water.json";
+import tilemap from "../tilemap/tilemap.json";
 import images from "../public/assets/sprites/*.png";
-import { MAP_KEY, SPRITE_KEYS } from "../game-config";
+import { MAP_KEY, SPRITE_KEYS } from "../game-variables";
 import { GameObjects, Zombie, NiceZombie, Skeleton } from "../gameobjects/gameobjects-components";
 import { PluginScene, UI_SCENE_KEY } from "./scenes-components";
 import { CursorKeys } from "../scripts/scripts-components";
@@ -30,29 +30,26 @@ export class MainScene extends PluginScene
   public create()
   {
     this.buildMap();
-    const houses = this.placeHouses();
 
+    const houses = this.placeHouses();
     const zombies = this.physics.add.group();
 
-    const niceZombie = new NiceZombie(this, 900, 200);
-    const simpleZombie = new Zombie(this, 1100, 400);
-
-    zombies.add(niceZombie);
-    zombies.add(simpleZombie);
+    zombies.add(new NiceZombie(this, 900, 200));
+    zombies.add(new Zombie(this, 1100, 400));
 
     this.player = new Skeleton(this);
+
+    const stopPlayerMovement = () => this.player.clearTargetTile();
 
     zombies.children.iterate(z =>
     {
       const zombie = z as Zombie;
       zombie.setPointerEvent(this.player);
-      zombie.setCollider();
+      zombie.setCollider(this.player, stopPlayerMovement);
     });
 
-    const stopPlayerMovement = () => this.player.clearTargetTile();
-
     this.physics.add.collider(houses, this.player, stopPlayerMovement);
-    this.physics.add.collider(zombies, this.player, stopPlayerMovement);
+    this.physics.add.collider(zombies, houses);
     //TODO: this overlap addition should be created more dynamically
     this.physics.add.overlap(zombies, this.player._fire, (fire, zombie) =>
     {
@@ -62,6 +59,7 @@ export class MainScene extends PluginScene
     });
 
     this.cameraControls = this.input.keyboard.createCursorKeys();
+
     this.cameras.main.startFollow(this.player);
 
     this.scene.launch(UI_SCENE_KEY, { player: this.player, scene: this });

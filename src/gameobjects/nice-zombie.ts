@@ -1,6 +1,7 @@
 import { Zombie } from "./zombie";
 import { SimpleDialogue, SimpleTextBox } from "./ui/ui-gameobjects-components";
 import { PluginScene, Scene, UI_SCENE_KEY } from "../scenes/scenes-components";
+import { enable } from "../scripts/utilities";
 
 const introduction = "Hello I'm a friendly Zombie, and that other one is a not so friendly Zombie."
 
@@ -19,7 +20,8 @@ export class NiceZombie extends Zombie
     //If you want look for another better way of pointer down event
     this.clearTint().on('pointerdown', () =>
     {
-      if (this.dialogue) this.dialogue.displayAndUpdate(true);
+      if (this._target) return;
+      if (this.dialogue) enable(this.dialogue);
       else
       {
         //TODO: make a function for this repeated code, use origin (0.5) instead

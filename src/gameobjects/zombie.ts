@@ -1,8 +1,9 @@
-import { SPRITE_KEYS } from "../game-config";
+import { SPRITE_KEYS } from "../game-variables";
 import { GameObjects, Skeleton } from "./gameobjects-components";
 import { Scene } from "phaser";
 import { IPosition, TextStyle } from "../scripts/scripts-components";
-import { disable } from "../scripts/utilities";
+import { enable } from "../scripts/utilities";
+import Collider = Phaser.Physics.Arcade.Collider;
 
 //TODO: Generalize methods and interfaces from Skeleton class
 //TODO: let zombie walk around
@@ -12,7 +13,8 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
   private _health: number = 100;
   private damageText: GameObjects.Text;
 
-  private _target: Skeleton;
+  protected _target: Skeleton;
+  private _collider: Collider;
 
   constructor(scene: Scene, x = scene.cameras.main.centerX, y = scene.cameras.main.centerY)
   {
@@ -56,10 +58,14 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
         {
           const damage = Phaser.Math.Between(25, 50);
           this.takeDamage(player, damage);
-          if(!this._target)
+          if (!this._target)
           {
             this._target = player;
-            //TODO: set on start collision do damage to player, as new collision
+            this._collider.collideCallback = (zombie, playerCollider) =>
+            {
+              const playerBody = playerCollider as Skeleton;
+              playerBody.takeDamage({ x: this.x, y: this.y }, Phaser.Math.Between(10, 15));
+            }
           }
         }
 
@@ -90,14 +96,18 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite
     {
       //TODO: Create disable method for all gameobjects
       camera.flash(100);
-      disable(this);
+      enable(this, false);
+      // @ts-ignore
+      this.body.setEnable(false);
     }
 
     camera.shake(100);
   }
 
-  public setCollider()
+  public setCollider(player: Skeleton, collideCallback?)
   {
+    this._collider = this.scene.physics.add.collider(this, player, collideCallback);
+
     const height = this.width * .5;
     this.setSize(this.width * .25, height);
     this.setPushable(false);

@@ -1,8 +1,8 @@
-import { SPRITE_KEYS } from "../game-config";
+import { SPRITE_KEYS } from "../game-variables";
 import { GameObjects, Physics } from "./gameobjects-components";
 import { Scene } from "phaser";
 import { IPosition, TextStyle } from "../scripts/scripts-components";
-import { disable } from "../scripts/utilities";
+import { enable } from "../scripts/utilities";
 
 type AnimationFrame =
   {
@@ -95,7 +95,6 @@ export class Skeleton extends Physics.Arcade.Sprite
   {
     super(scene, x, y, SPRITE_KEYS.skeleton);
     this.name = "Player";
-
     this.speed = speed;
     this.targetPosition = { x, y };
     this.setDepth(y + 64).setAnimations();
@@ -140,7 +139,7 @@ export class Skeleton extends Physics.Arcade.Sprite
   public activateFire(activate: boolean = true)
   {
     const fire = this._fire;
-    disable(fire, activate);
+    enable(fire, activate);
     // @ts-ignore
     fire.body.setEnable(activate);
 
@@ -163,22 +162,23 @@ export class Skeleton extends Physics.Arcade.Sprite
     //TODO: this should be the enemy weapon
     const knockbackForce = 2;
     this.setDrag(0.1);
+
     this.setDamping(true);
+    setInterval(() => this.setDamping(false), 1000);
+
     this.setVelocity((this.x - damagerX) * knockbackForce, (this.y - damagerY) * knockbackForce);
 
     this._health -= damage;
 
     //TODO: tween an animation
-    this.damageText.setPosition(this.x, this.y);
-    this.damageText.setText(`-${damage}`);
-    this.damageText.setDepth(this.y * 2);
+    this.damageText.setPosition(this.x, this.y).setText(`-${damage}`).setDepth(this.y * 2);
 
     const camera = this.scene.cameras.main;
     if (this._health <= 0)
     {
       //TODO: Create disable method for all gameobjects
       camera.flash(100);
-      disable(this);
+      enable(this, false);
     }
 
     camera.shake(100);

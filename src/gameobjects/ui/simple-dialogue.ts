@@ -1,6 +1,6 @@
 import { Dialog, SimpleTextBox } from "./ui-gameobjects-components";
-import { PluginScene, Scene } from "../../scenes/scenes-components";
-import { disable } from "../../scripts/utilities";
+import { PluginScene, Scene, UI_SCENE_KEY, UIScene } from "../../scenes/scenes-components";
+import { enable } from "../../scripts/utilities";
 
 const createLabel = function (scene: PluginScene, text: string = "No Text")
 {
@@ -125,15 +125,18 @@ export class SimpleDialogue extends Dialog
     //TODO: find a better way of detecting choices
     this.on('button.click', (button, groupName: string, index: number) =>
     {
-      //TODO: Change hardcode conversation
+      //TODO: Change hardcoded conversation
+      const uiScene = this.scene.game.scene.getScene(UI_SCENE_KEY) as UIScene;
       switch (button.text)
       {
         case option1:
           //TODO: check why the start is not reusing the textbox and creating new things
           this.textBox.start(answer1, 10);
+          uiScene.addQuest("No more brains", "Kill all the zombies");
           break;
         case option2:
           this.textBox.start(answer2, 25);
+          uiScene.addQuest("Feed them brains", "Become friend with the zombies");
           break;
         case option3:
           this.textBox.start(answer3, 50);
@@ -142,12 +145,12 @@ export class SimpleDialogue extends Dialog
           this.textBox.start(Math.round(Math.random()) === 0 ? "Cya" : "Goodbye Friend", 50);
           this.textBox.onConversationEnd = () =>
           {
-            disable(this.textBox, false);
-            disable(this, false);
+            enable(this.textBox, false);
+            enable(this, false);
           }
           return;
       }
-      disable(this, false);
+      enable(this, false);
       print.text += groupName + '-' + index + ': ' + button.text + '\n';
     })
       .on('button.over', (button) => button.getElement('background').setStrokeStyle(1, 0xffffff))

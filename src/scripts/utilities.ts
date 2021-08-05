@@ -1,6 +1,6 @@
 import { SimpleDialogue, SimpleTextBox } from "../gameobjects/ui/ui-gameobjects-components";
 
-function disable(obj: Phaser.GameObjects.Image | Phaser.Physics.Arcade.Sprite | SimpleTextBox | SimpleDialogue, value = false)
+function enable(obj: Phaser.GameObjects.Image | Phaser.Physics.Arcade.Sprite | SimpleTextBox | SimpleDialogue, value = true)
 {
   obj.setActive(value);
   obj.setVisible(value);
@@ -8,5 +8,5 @@ function disable(obj: Phaser.GameObjects.Image | Phaser.Physics.Arcade.Sprite | 
 
 export
 {
-  disable
+  enable
 }

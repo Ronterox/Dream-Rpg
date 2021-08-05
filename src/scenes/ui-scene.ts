@@ -8,7 +8,7 @@ const COLOR_PRIMARY = 0x4e342e;
 const COLOR_LIGHT = 0x7b5e57;
 const COLOR_DARK = 0x260e04;
 
-enum ButtonIndex { Spell, Chat }
+enum ButtonIndex { Spell, Quest, Chat }
 
 export class UIScene extends PluginScene
 {
@@ -17,6 +17,9 @@ export class UIScene extends PluginScene
   private otherScene: Scene;
 
   private isChatOpen: boolean = false;
+
+  //TODO: Create own design and class for this, adding ids to them
+  private questText: Phaser.GameObjects.Text;
 
   constructor()
   {
@@ -34,6 +37,16 @@ export class UIScene extends PluginScene
   {
     this.fpsText = this.add.text(16, 16, "60 fps, 0 objects");
     this.createButtons();
+
+    const mainCamera = this.cameras.main;
+
+    this.questText = this.add.text(mainCamera.centerX - 150, mainCamera.centerY - 150, "------------ Quests ------------\n", { color: "white" });
+    this.questText.setVisible(false);
+  }
+
+  public addQuest(questTitle: string, questDescription: string)
+  {
+    this.questText.text += "||" + questTitle.toUpperCase() + "||\n--" + questDescription + "--\n";
   }
 
   public createButton(text: string = "", width = 100, height = 40, color: number = COLOR_LIGHT): Label
@@ -52,7 +65,7 @@ export class UIScene extends PluginScene
     const buttons = this.rexUI.add.buttons({
       x: 100, y: 300,
       orientation: 'y',
-      buttons: [this.createButton('Spell'), this.createButton('Chat', 100, 40, COLOR_PRIMARY)],
+      buttons: [this.createButton('Spell'), this.createButton('Quest'), this.createButton('Chat', 100, 40, COLOR_PRIMARY)],
       space: { item: 8 }
     }).layout();
 
@@ -71,6 +84,9 @@ export class UIScene extends PluginScene
             this._player.activateFire(false);
             button.clearAlpha();
           }, 1000);
+          break;
+        case ButtonIndex.Quest:
+          this.questText.setVisible(!this.questText.visible);
           break;
         case ButtonIndex.Chat:
           this.isChatOpen = !this.isChatOpen;
